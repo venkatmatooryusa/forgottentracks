@@ -263,6 +263,81 @@
       font-size: 0.78rem;
       font-family: inherit;
     }
+/* Dropdown nav items */
+.nav-item {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+}
+
+/* Top-level buttons get existing .nav styles; we just add a helper class */
+.nav-top {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* Tiny caret icon */
+.nav-top::after {
+  content: "▾";
+  font-size: 0.65rem;
+  opacity: 0.8;
+}
+
+/* Submenu container */
+.nav-submenu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  min-width: 190px;
+  background: rgba(15, 23, 42, 0.98);
+  border-radius: 0.75rem;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.95),
+    0 0 35px rgba(15, 23, 42, 0.9);
+  padding: 0.35rem;
+  display: none;
+  z-index: 60;
+}
+
+/* Show submenu on hover (desktop) */
+.nav-item:hover .nav-submenu {
+  display: block;
+}
+
+/* Submenu buttons */
+.nav-sub {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.35rem 0.6rem;
+  border-radius: 0.55rem;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.nav-sub:hover {
+  background: rgba(15, 23, 42, 0.95);
+  border-color: rgba(251, 191, 36, 0.45);
+  color: var(--accent-strong);
+}
+
+/* Make nav wrap nicely on smaller screens */
+@media (max-width: 900px) {
+  .nav {
+    flex-wrap: wrap;
+  }
+  .nav-submenu {
+    position: static;
+    box-shadow: none;
+    border-radius: 0.6rem;
+    margin-top: 0.25rem;
+  }
+}
 
     .nav button:hover {
       color: var(--accent-strong);
@@ -1302,25 +1377,91 @@
 
   <nav class="nav" role="navigation" aria-label="Main">
   <!-- FT Insight: Overview, Golden Cage, Key Ideas, Who it’s for -->
-  <button class="nav-primary" data-target="overview" data-group="ft">
-    FT Insight
-  </button>
+  <div class="nav-item">
+    <button
+      class="nav-primary nav-top"
+      data-target="overview"
+      data-group="ft"
+      type="button"
+    >
+      FT Insight
+    </button>
+    <div class="nav-submenu">
+      <button class="nav-sub" data-target="overview" type="button">
+        Overview
+      </button>
+      <button class="nav-sub" data-target="golden-cage" type="button">
+        The Golden Cage
+      </button>
+      <button class="nav-sub" data-target="key-ideas" type="button">
+        Key Ideas
+      </button>
+      <button class="nav-sub" data-target="who" type="button">
+        Who it’s for
+      </button>
+    </div>
+  </div>
 
-  <!-- The Book: Inside the Book (Structure, Reading Practice, Abridged Edition) -->
-  <button data-target="inside" data-group="book">
-    The Book
-  </button>
+  <!-- The Book: structure, reading practice, abridged (all inside #inside) -->
+  <div class="nav-item">
+    <button
+      class="nav-top"
+      data-target="inside"
+      data-group="book"
+      type="button"
+    >
+      The Book
+    </button>
+    <div class="nav-submenu">
+      <button class="nav-sub" data-target="inside" type="button">
+        Structure &amp; Reading Practice
+      </button>
+      <!-- If you gave the abridged block its own id (e.g. inside-abridged) you can add: -->
+      <!-- <button class="nav-sub" data-target="inside-abridged" type="button">
+        Abridged Edition (1-page each)
+      </button> -->
+    </div>
+  </div>
 
-  <!-- Deep Dive: Deep Dive Tools, Stories, 12-week Sprint, Lexicon -->
-  <button data-target="deep-dive" data-group="deep">
-    Deep Dive
-  </button>
+  <!-- Deep Dive: tools, stories, sprint, lexicon -->
+  <div class="nav-item">
+    <button
+      class="nav-top"
+      data-target="deep-dive"
+      data-group="deep"
+      type="button"
+    >
+      Deep Dive
+    </button>
+    <div class="nav-submenu">
+      <button class="nav-sub" data-target="deep-dive" type="button">
+        Quick Assessments
+      </button>
+      <button class="nav-sub" data-target="stories" type="button">
+        Stories
+      </button>
+      <button class="nav-sub" data-target="twelve-week-sprint" type="button">
+        12-week Sprint
+      </button>
+      <button class="nav-sub" data-target="lexicon" type="button">
+        Lexicon
+      </button>
+    </div>
+  </div>
 
   <!-- About Author -->
-  <button data-target="author" data-group="author">
-    About Author
-  </button>
+  <div class="nav-item">
+    <button
+      class="nav-top"
+      data-target="author"
+      data-group="author"
+      type="button"
+    >
+      About Author
+    </button>
+  </div>
 </nav>
+
 
     </div>
   </header>
