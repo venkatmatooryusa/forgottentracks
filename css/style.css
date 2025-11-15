@@ -1,0 +1,14 @@
+/* Styling to make the image act like a full-width banner */
+.page-header {
+    width: 100%; 
+    margin: 0; 
+    padding: 0; 
+}
+
+.banner-image {
+    width: 100%;        /* Make the image span the full width of the browser window */
+    height: auto;       /* Ensure the image's proportions are maintained */
+    display: block;     /* Important to remove default inline spacing */
+    object-fit: cover;  /* Optional: Ensures the image covers the area without distortion */
+    max-height: 250px;  /* Optional: Set a maximum height to keep it from being too large */
+}
