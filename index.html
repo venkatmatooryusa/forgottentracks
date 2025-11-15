@@ -1300,17 +1300,28 @@
         </div>
       </div>
 
-      <nav class="nav" role="navigation" aria-label="Main">
-        <button class="nav-primary" data-target="overview">Overview</button>
-        <button data-target="golden-cage">The Golden Cage</button>
-        <button data-target="key-ideas">Key Ideas</button>
-        <button data-target="deep-dive">Deep Dive Tools</button>
-        <button data-target="lexicon">Lexicon</button>
-        <button data-target="who">Who It’s For</button>
-        <button data-target="inside">Inside the Book</button>
-        <button data-target="author">About the Author</button>
-        <button data-target="top">Back to Top</button>
-      </nav>
+  <nav class="nav" role="navigation" aria-label="Main">
+  <!-- FT Insight: Overview, Golden Cage, Key Ideas, Who it’s for -->
+  <button class="nav-primary" data-target="overview" data-group="ft">
+    FT Insight
+  </button>
+
+  <!-- The Book: Inside the Book (Structure, Reading Practice, Abridged Edition) -->
+  <button data-target="inside" data-group="book">
+    The Book
+  </button>
+
+  <!-- Deep Dive: Deep Dive Tools, Stories, 12-week Sprint, Lexicon -->
+  <button data-target="deep-dive" data-group="deep">
+    Deep Dive
+  </button>
+
+  <!-- About Author -->
+  <button data-target="author" data-group="author">
+    About Author
+  </button>
+</nav>
+
     </div>
   </header>
 
@@ -1845,6 +1856,118 @@
         </div>
       </div>
     </section>
+
+    <!-- Stories (Deep Dive) -->
+<section id="stories">
+  <div class="container">
+    <div class="section-heading">Narratives</div>
+    <h2 class="section-title">Stories that Expose the Golden Cage</h2>
+    <p class="section-lead">
+      The book uses lived stories to make the Golden Cage visible in ordinary,
+      respectable lives – and to show how people slowly begin to walk out of it.
+      These are not fairy-tale pivots, but messy, honest transitions.
+    </p>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-tag">Story Pattern</div>
+        <div class="card-title">The Director’s Son</div>
+        <p>
+          A young professional inherits a powerful surname and a predetermined
+          path. On paper, he is “set for life”. The story traces how Sacred Debt,
+          optics, and fear trap him – and what it takes to renegotiate his
+          life’s mandate with his family.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-tag">Story Pattern</div>
+        <div class="card-title">The Quiet Topper</div>
+        <p>
+          A consistent high performer who never felt “passionate” about anything,
+          slowly discovers an Ethical Tug – and learns to infer purpose from
+          structural integrity rather than fireworks of emotion.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-tag">Story Pattern</div>
+        <div class="card-title">The Exhausted Leader</div>
+        <p>
+          A senior leader realises that each promotion has taken them further
+          away from the mission that once drove them. The narrative unpacks how
+          return on purpose can be rebuilt without throwing away decades of work.
+        </p>
+      </div>
+    </div>
+
+    <div class="tagline-quote" style="margin-top:1.3rem;">
+      The stories are mirrors, not morals. They are meant to help you
+      recognise which Golden Cage patterns you are quietly living out today.
+    </div>
+  </div>
+</section>
+<!-- 12-week Sprint (Deep Dive) -->
+<section id="twelve-week-sprint" class="section-alt">
+  <div class="container">
+    <div class="section-heading">Practice</div>
+    <h2 class="section-title">A 12-Week Sprint to Reorient Your Career</h2>
+    <p class="section-lead">
+      The book can be read over a weekend. But its real power comes when you
+      treat it as a 12-week sprint: small, deliberate moves that shift you
+      out of the Golden Cage and toward your Forgotten Track.
+    </p>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-tag">Weeks 1–3</div>
+        <div class="card-title">Facing the Golden Cage</div>
+        <p>
+          Map your current Golden Cage risk, write your Sacred Debt story, and
+          run the first set of self-assessments. The goal is honest diagnosis:
+          <em>Where am I compliant? Where am I alive?</em>
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-tag">Weeks 4–6</div>
+        <div class="card-title">Defining WHY and WHO</div>
+        <p>
+          Use the WHY / WHO / HOW triad to draft your mission sentence and
+          identify your Impact Zone. Involve a mentor, parent, or peer and
+          run a “purpose-first conversation” together.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-tag">Weeks 7–9</div>
+        <div class="card-title">Designing Experiments</div>
+        <p>
+          Frame 2–3 Minimum Viable Contributions (MVCs) and one
+          <em>Forgotten Tracks Project</em> that you can run alongside your
+          current commitments – without burning bridges or going rogue.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-tag">Weeks 10–12</div>
+        <div class="card-title">Building a Portfolio of Purpose</div>
+        <p>
+          Curate your early artefacts into a simple Portfolio of Purpose,
+          gather feedback from beneficiaries, and run a mini Perpetual Audit:
+          <em>What needs to change in the next 12 months?</em>
+        </p>
+      </div>
+    </div>
+
+    <div class="tagline-quote" style="margin-top:1.3rem;">
+      The sprint is not about quitting your job overnight.  
+      It is about changing the <strong>geometry</strong> of your effort so that
+      return on purpose begins to rise – visibly and measurably.
+    </div>
+  </div>
+</section>
+
 
     <!-- Lexicon -->
     <section id="lexicon">
@@ -2789,55 +2912,81 @@
     });
 
     // Active nav state + scroll progress
-    var sections = [
-      "overview",
-      "golden-cage",
-      "key-ideas",
-      "deep-dive",
-      "lexicon",
-      "who",
-      "inside",
-      "author"
-    ].map(function (id) {
-      var el = document.getElementById(id);
-      return { id: id, el: el };
-    });
+    // Active nav state + scroll progress (group-based)
+var sections = [
+  "overview",          // FT Insight
+  "golden-cage",       // FT Insight
+  "key-ideas",         // FT Insight
+  "who",               // FT Insight
+  "inside",            // The Book
+  "deep-dive",         // Deep Dive: tools
+  "stories",           // Deep Dive: stories
+  "twelve-week-sprint",// Deep Dive: 12-week sprint
+  "lexicon",           // Deep Dive: lexicon
+  "author"             // About Author
+].map(function (id) {
+  var el = document.getElementById(id);
+  return { id: id, el: el };
+});
 
-    var navMap = {};
-    document.querySelectorAll(".nav button").forEach(function (btn) {
-      var t = btn.getAttribute("data-target");
-      if (t) navMap[t] = btn;
-    });
+// Map each section to a nav group
+var sectionGroups = {
+  "overview": "ft",
+  "golden-cage": "ft",
+  "key-ideas": "ft",
+  "who": "ft",
 
-    var progressBar = document.getElementById("progress-bar");
+  "inside": "book",
 
-    function onScroll() {
-      var scrollY = window.scrollY || window.pageYOffset;
-      var docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      var progress = docHeight > 0 ? (scrollY / docHeight) * 100 : 0;
-      if (progressBar) {
-        progressBar.style.width = progress + "%";
-      }
+  "deep-dive": "deep",
+  "stories": "deep",
+  "twelve-week-sprint": "deep",
+  "lexicon": "deep",
 
-      // active section
-      var current = null;
-      sections.forEach(function (s) {
-        if (!s.el) return;
-        var rect = s.el.getBoundingClientRect();
-        var top = rect.top;
-        var height = rect.height;
-        if (top <= 120 && top + height > 120) {
-          current = s.id;
-        }
-      });
+  "author": "author"
+};
 
-      Object.keys(navMap).forEach(function (id) {
-        navMap[id].classList.remove("nav-active");
-      });
-      if (current && navMap[current]) {
-        navMap[current].classList.add("nav-active");
-      }
+// Map group keys to nav buttons
+var navGroupButtons = {};
+document.querySelectorAll(".nav button[data-group]").forEach(function (btn) {
+  var g = btn.getAttribute("data-group");
+  if (g) navGroupButtons[g] = btn;
+});
+
+function onScroll() {
+  var scrollY = window.scrollY || window.pageYOffset;
+  var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  var progress = docHeight > 0 ? (scrollY / docHeight) * 100 : 0;
+  if (progressBar) {
+    progressBar.style.width = progress + "%";
+  }
+
+  // find current section
+  var current = null;
+  sections.forEach(function (s) {
+    if (!s.el) return;
+    var rect = s.el.getBoundingClientRect();
+    var top = rect.top;
+    var height = rect.height;
+    if (top <= 120 && top + height > 120) {
+      current = s.id;
     }
+  });
+
+  // clear all nav states
+  Object.keys(navGroupButtons).forEach(function (g) {
+    navGroupButtons[g].classList.remove("nav-active");
+  });
+
+  // set active based on group
+  if (current) {
+    var group = sectionGroups[current] || null;
+    if (group && navGroupButtons[group]) {
+      navGroupButtons[group].classList.add("nav-active");
+    }
+  }
+}
+
 
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
