@@ -1,14 +1,40 @@
-/* Styling to make the image act like a full-width banner */
-.page-header {
-    width: 100%; 
-    margin: 0; 
-    padding: 0; 
+/* Full-width hero banner */
+.site-banner {
+  width: 100%;
+  min-height: 300px;
+  /* Adjust min-height for mobile/desktop if needed */
+  background: url("https://raw.githubusercontent.com/venkatmatooryusa/forgottentracks/main/images/site-banner.png") center center / cover no-repeat;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-main);
+  text-align: center;
 }
 
-.banner-image {
-    width: 100%;        /* Make the image span the full width of the browser window */
-    height: auto;       /* Ensure the image's proportions are maintained */
-    display: block;     /* Important to remove default inline spacing */
-    object-fit: cover;  /* Optional: Ensures the image covers the area without distortion */
-    max-height: 250px;  /* Optional: Set a maximum height to keep it from being too large */
+.site-banner-overlay {
+  background-color: rgba(0,0,0,0.45); /* semi-dark overlay so text stands out */
+  padding: 1rem 2rem;
+  border-radius: 0.5rem;
+}
+
+.site-banner-title {
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
+  margin: 0;
+  color: var(--accent-strong);
+}
+
+.site-banner-subtitle {
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  margin-top: 0.5rem;
+  color: var(--text-main);
+}
+
+@media (max-width: 640px) {
+  .site-banner {
+    min-height: 200px;
+  }
+  .site-banner-overlay {
+    padding: 0.8rem 1rem;
+  }
 }
