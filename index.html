@@ -374,6 +374,78 @@
       }
     }
 
+    .nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 0.6rem;
+}
+
+.nav-item {
+  position: relative;            /* needed for absolute dropdown */
+}
+
+.nav-link {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+/* The dropdown itself */
+.nav-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 0.25rem;
+  min-width: 210px;
+  background: rgba(15, 23, 42, 0.98);
+  border-radius: 0.6rem;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.9);
+  padding: 0.4rem;
+  
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(6px);
+  transition:
+    opacity 0.16s ease-out,
+    transform 0.16s ease-out,
+    visibility 0.16s ease-out;
+}
+
+/* Keep dropdown open while hovering either the item or the dropdown */
+.nav-item:hover .nav-dropdown,
+.nav-item:focus-within .nav-dropdown {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* Optional: style the buttons inside the dropdown */
+.nav-dropdown button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: transparent;
+  color: var(--text-main);
+  font-size: 0.78rem;
+  padding: 0.35rem 0.45rem;
+  border-radius: 0.4rem;
+  cursor: pointer;
+}
+
+.nav-dropdown button:hover {
+  background: rgba(30, 64, 175, 0.6);
+}
+
     button:focus-visible,
     .pill-link:focus-visible {
       outline: 2px solid var(--accent-strong);
