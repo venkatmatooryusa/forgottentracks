@@ -1506,14 +1506,6 @@
   gap: 1rem;
   margin-top: 1.2rem;
 }
-/* Show/hide chapter grids by part "open" state */
-.chapter-part .chapter-grid {
-  display: none;        /* hidden by default */
-}
-
-.chapter-part.open .chapter-grid {
-  display: grid;        /* visible when .open is present */
-}
 
 /* Make it 2 columns on medium screens */
 @media (max-width: 960px) {
@@ -4559,15 +4551,18 @@ function onScroll() {
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
     onScroll();
-    /* =========================
+
+        /* =========================
        Abridged Edition – Part header accordion
        ========================= */
-    var chapterParts = Array.prototype.slice.call(
-      document.querySelectorAll(".chapter-part")
-    );
+    (function setupAbridgedAccordion() {
+      var chapterParts = Array.prototype.slice.call(
+        document.querySelectorAll(".chapter-part")
+      );
 
-    if (chapterParts.length) {
-      // Toggle individual parts on header click
+      if (!chapterParts.length) return;
+
+      // Individual Part toggle
       chapterParts.forEach(function (part) {
         var header = part.querySelector(".chapter-part-header");
         var icon = part.querySelector(".chapter-part-toggle-icon");
@@ -4581,7 +4576,7 @@ function onScroll() {
         });
       });
 
-      // Expand / Collapse all buttons
+      // Expand / Collapse All buttons
       var expandAllBtn = document.getElementById("expand-all-summaries");
       var collapseAllBtn = document.getElementById("collapse-all-summaries");
 
@@ -4604,9 +4599,8 @@ function onScroll() {
           });
         });
       }
-    }
-  
-  })();
+    })();
+
 </script>
   <script>
 document.addEventListener('DOMContentLoaded', function () {
