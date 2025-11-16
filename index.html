@@ -1494,15 +1494,9 @@
 
 /* The “Read 1-page summary” pill */
 .chapter-card-open {
-  align-self: flex-start;
   margin-top: 0.1rem;
-  padding: 0.25rem 0.7rem;
-  border-radius: 999px;
-  border: 1px solid rgba(251, 191, 36, 0.8);
-  background: rgba(0, 0, 0, 0.7);
-  color: var(--accent-strong);
-  font-size: 0.8rem;
-  cursor: pointer;
+  align-self: flex-start;
+  background: none;   /* visual is from .pill-primary */
 }
 
 /* Slight hover feedback */
@@ -1827,19 +1821,19 @@
 
           <div class="pill-group">
             <div
-              class="pill critical concept-pill"
+              class="pill-info critical concept-pill"
               data-tooltip="Sacred Debt is the emotional and moral obligation many of us feel toward our parents and families for the sacrifices they made. It quietly dictates our career choices: we pursue prestigious, ‘safe’ options not because they are ours, but because we feel we owe it to those who invested in us. Left unexamined, Sacred Debt can trap us in the Golden Cage – a life we sustain for others, while our own purpose withers."
             >
               Sacred Debt &amp; Parental Sacrifice
             </div>
             <div
-              class="pill critical concept-pill"
+              class="pill-info critical concept-pill"
               data-tooltip="The templatized funnel of ‘safe’ careers is the narrow pipeline of socially approved options – engineer, doctor, MBA, government officer, and a few corporate badges. It reduces a whole generation’s talent to a handful of tracks that look secure on brochures but ignore the diversity of human capability and mission. The funnel is efficient for systems, but often brutal on individual purpose."
             >
               Templatized Funnel of “Safe” Careers
             </div>
             <div
-              class="pill critical concept-pill"
+              class="pill-info critical concept-pill"
               data-tooltip="The tyranny of optics is the pressure to optimise for how life looks rather than what it actually does. Promotions, college names, salaries, and LinkedIn headlines become proxies for worth. Decisions get made for photographs, not for utility or alignment. Under this tyranny, even meaningful paths can feel ‘less than’ if they do not photograph well, pushing people back toward the Golden Cage."
             >
               Tyranny of Optics &amp; Social Validation
@@ -3011,14 +3005,15 @@
       you decide which parts to dive back into in full.
     </p>
 
-    <div class="chapter-controls">
-      <button id="expand-all-summaries" type="button" class="chapter-controls-btn">
-        Expand all summaries
-      </button>
-      <button id="collapse-all-summaries" type="button" class="chapter-controls-btn">
-        Collapse all summaries
-      </button>
-    </div>
+ <div class="chapter-controls">
+  <button id="expand-all-summaries" type="button" class="chapter-controls-btn pill-primary">
+    Expand all summaries
+  </button>
+  <button id="collapse-all-summaries" type="button" class="chapter-controls-btn pill-primary">
+    Collapse all summaries
+  </button>
+</div>
+
 
     <!-- Part I -->
     <div class="chapter-part open" data-part="1">
@@ -3034,7 +3029,7 @@
           <div class="chapter-card-meta">Chapter 1</div>
           <div class="chapter-card-title">The Director’s Son</div>
           <button
-            class="chapter-card-open"
+            class="chapter-card-open pill-primary"
             type="button"
             aria-expanded="false"
             aria-controls="ch-01-summary"
@@ -3067,7 +3062,7 @@
           <div class="chapter-card-meta">Chapter 2</div>
           <div class="chapter-card-title">The Golden Cage</div>
           <button
-            class="chapter-card-open"
+            class="chapter-card-open pill-primary"
             type="button"
             aria-expanded="false"
             aria-controls="ch-02-summary"
@@ -3099,7 +3094,7 @@
           <div class="chapter-card-meta">Chapter 3</div>
           <div class="chapter-card-title">The Flaw in the Metric</div>
           <button
-            class="chapter-card-open"
+            class="chapter-card-open pill-primary"
             type="button"
             aria-expanded="false"
             aria-controls="ch-03-summary"
@@ -3132,7 +3127,7 @@
           <div class="chapter-card-meta">Chapter 4</div>
           <div class="chapter-card-title">Introducing the Forgotten Tracks</div>
           <button
-            class="chapter-card-open"
+            class="chapter-card-open pill-primary"
             type="button"
             aria-expanded="false"
             aria-controls="ch-04-summary"
@@ -3175,7 +3170,7 @@
           <div class="chapter-card-meta">Chapter 5</div>
           <div class="chapter-card-title">The Unconstrained Mind</div>
           <button
-            class="chapter-card-open"
+            class="chapter-card-open pill-primary"
             type="button"
             aria-expanded="false"
             aria-controls="ch-05-summary"
@@ -3207,7 +3202,7 @@
           <div class="chapter-card-meta">Chapter 6</div>
           <div class="chapter-card-title">The Catalyst Conversation</div>
           <button
-            class="chapter-card-open"
+            class="chapter-card-open pill-primary"
             type="button"
             aria-expanded="false"
             aria-controls="ch-06-summary"
@@ -3239,7 +3234,7 @@
           <div class="chapter-card-meta">Chapter 7</div>
           <div class="chapter-card-title">The Three Pillars of Purpose</div>
           <button
-            class="chapter-card-open"
+            class="chapter-card-open pill-primary"
             type="button"
             aria-expanded="false"
             aria-controls="ch-07-summary"
@@ -3270,7 +3265,7 @@
           <div class="chapter-card-meta">Chapter 8</div>
           <div class="chapter-card-title">The WHY Exercise</div>
           <button
-            class="chapter-card-open"
+            class="chapter-card-open pill-primary"
             type="button"
             aria-expanded="false"
             aria-controls="ch-08-summary"
@@ -3301,7 +3296,7 @@
           <div class="chapter-card-meta">Chapter 9</div>
           <div class="chapter-card-title">The WHO Exercise</div>
           <button
-            class="chapter-card-open"
+            class="chapter-card-open pill-primary"
             type="button"
             aria-expanded="false"
             aria-controls="ch-09-summary"
@@ -3331,7 +3326,7 @@
           <div class="chapter-card-meta">Chapter 10</div>
           <div class="chapter-card-title">The HOW Exercise</div>
           <button
-            class="chapter-card-open"
+            class="chapter-card-open pill-primary"
             type="button"
             aria-expanded="false"
             aria-controls="ch-10-summary"
@@ -3362,7 +3357,7 @@
           <div class="chapter-card-meta">Chapter 11</div>
           <div class="chapter-card-title">Passion in a Vacuum</div>
           <button
-            class="chapter-card-open"
+            class="chapter-card-open pill-primary"
             type="button"
             aria-expanded="false"
             aria-controls="ch-11-summary"
@@ -3393,7 +3388,7 @@
           <div class="chapter-card-meta">Chapter 12</div>
           <div class="chapter-card-title">The Framework Synthesis</div>
           <button
-            class="chapter-card-open"
+            class="chapter-card-open pill-primary"
             type="button"
             aria-expanded="false"
             aria-controls="ch-12-summary"
@@ -3423,7 +3418,7 @@
           <div class="chapter-card-meta">Chapter 13</div>
           <div class="chapter-card-title">The Moment of Pivot</div>
           <button
-            class="chapter-card-open"
+            class="chapter-card-open pill-primary"
             type="button"
             aria-expanded="false"
             aria-controls="ch-13-summary"
@@ -3465,7 +3460,7 @@
           <div class="chapter-card-meta">Chapter 14</div>
           <div class="chapter-card-title">The Curriculum Inversion</div>
           <button
-            class="chapter-card-open"
+            class="chapter-card-open pill-primary"
             type="button"
             aria-expanded="false"
             aria-controls="ch-14-summary"
@@ -3496,7 +3491,7 @@
           <div class="chapter-card-meta">Chapter 15</div>
           <div class="chapter-card-title">The Portfolio of Purpose</div>
           <button
-            class="chapter-card-open"
+            class="chapter-card-open pill-primary"
             type="button"
             aria-expanded="false"
             aria-controls="ch-15-summary"
@@ -3527,7 +3522,7 @@
           <div class="chapter-card-meta">Chapter 16</div>
           <div class="chapter-card-title">The Mentorship Blueprint</div>
           <button
-            class="chapter-card-open"
+            class="chapter-card-open pill-primary"
             type="button"
             aria-expanded="false"
             aria-controls="ch-16-summary"
@@ -3557,7 +3552,7 @@
           <div class="chapter-card-meta">Chapter 17</div>
           <div class="chapter-card-title">The Family Compact</div>
           <button
-            class="chapter-card-open"
+            class="chapter-card-open pill-primary"
             type="button"
             aria-expanded="false"
             aria-controls="ch-17-summary"
@@ -3587,7 +3582,7 @@
           <div class="chapter-card-meta">Chapter 18</div>
           <div class="chapter-card-title">The Educator’s Mandate</div>
           <button
-            class="chapter-card-open"
+            class="chapter-card-open pill-primary"
             type="button"
             aria-expanded="false"
             aria-controls="ch-18-summary"
@@ -3617,7 +3612,7 @@
           <div class="chapter-card-meta">Chapter 19</div>
           <div class="chapter-card-title">The Peer Network Strategy</div>
           <button
-            class="chapter-card-open"
+            class="chapter-card-open pill-primary"
             type="button"
             aria-expanded="false"
             aria-controls="ch-19-summary"
@@ -3648,7 +3643,7 @@
           <div class="chapter-card-meta">Chapter 20</div>
           <div class="chapter-card-title">The Institutional Dialogue</div>
           <button
-            class="chapter-card-open"
+            class="chapter-card-open pill-primary"
             type="button"
             aria-expanded="false"
             aria-controls="ch-20-summary"
@@ -3679,7 +3674,7 @@
           <div class="chapter-card-meta">Chapter 21</div>
           <div class="chapter-card-title">The Corporate Pivot</div>
           <button
-            class="chapter-card-open"
+            class="chapter-card-open pill-primary"
             type="button"
             aria-expanded="false"
             aria-controls="ch-21-summary"
@@ -3709,7 +3704,7 @@
           <div class="chapter-card-meta">Chapter 22</div>
           <div class="chapter-card-title">The Policy Blueprint</div>
           <button
-            class="chapter-card-open"
+            class="chapter-card-open pill-primary"
             type="button"
             aria-expanded="false"
             aria-controls="ch-22-summary"
@@ -3740,7 +3735,7 @@
           <div class="chapter-card-meta">Chapter 23</div>
           <div class="chapter-card-title">The Global Map</div>
           <button
-            class="chapter-card-open"
+            class="chapter-card-open pill-primary"
             type="button"
             aria-expanded="false"
             aria-controls="ch-23-summary"
@@ -3782,7 +3777,7 @@
           <div class="chapter-card-meta">Chapter 24</div>
           <div class="chapter-card-title">The Perpetual Audit</div>
           <button
-            class="chapter-card-open"
+            class="chapter-card-open pill-primary"
             type="button"
             aria-expanded="false"
             aria-controls="ch-24-summary"
@@ -3813,7 +3808,7 @@
           <div class="chapter-card-meta">Chapter 25</div>
           <div class="chapter-card-title">The New Social Contract</div>
           <button
-            class="chapter-card-open"
+            class="chapter-card-open pill-primary"
             type="button"
             aria-expanded="false"
             aria-controls="ch-25-summary"
@@ -3843,7 +3838,7 @@
           <div class="chapter-card-meta">Chapter 26</div>
           <div class="chapter-card-title">The Principal’s Challenge</div>
           <button
-            class="chapter-card-open"
+            class="chapter-card-open pill-primary"
             type="button"
             aria-expanded="false"
             aria-controls="ch-26-summary"
@@ -3874,7 +3869,7 @@
           <div class="chapter-card-meta">Chapter 27</div>
           <div class="chapter-card-title">The Education Minister’s Challenge</div>
           <button
-            class="chapter-card-open"
+            class="chapter-card-open pill-primary"
             type="button"
             aria-expanded="false"
             aria-controls="ch-27-summary"
@@ -3905,7 +3900,7 @@
           <div class="chapter-card-meta">Chapter 28</div>
           <div class="chapter-card-title">The Corporate’s Challenge</div>
           <button
-            class="chapter-card-open"
+            class="chapter-card-open pill-primary"
             type="button"
             aria-expanded="false"
             aria-controls="ch-28-summary"
@@ -3935,7 +3930,7 @@
           <div class="chapter-card-meta">Chapter 29</div>
           <div class="chapter-card-title">Impact on Education Boards</div>
           <button
-            class="chapter-card-open"
+            class="chapter-card-open pill-primary"
             type="button"
             aria-expanded="false"
             aria-controls="ch-29-summary"
@@ -3964,7 +3959,7 @@
           <div class="chapter-card-meta">Chapter 30</div>
           <div class="chapter-card-title">Case in Point #1: Medical Admissions</div>
           <button
-            class="chapter-card-open"
+            class="chapter-card-open pill-primary"
             type="button"
             aria-expanded="false"
             aria-controls="ch-30-summary"
@@ -3992,7 +3987,7 @@
           <div class="chapter-card-meta">Chapter 31</div>
           <div class="chapter-card-title">Case in Point #2: Academic Streams</div>
           <button
-            class="chapter-card-open"
+            class="chapter-card-open pill-primary"
             type="button"
             aria-expanded="false"
             aria-controls="ch-31-summary"
