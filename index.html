@@ -1506,6 +1506,14 @@
   gap: 1rem;
   margin-top: 1.2rem;
 }
+/* Show/hide chapter grids by part "open" state */
+.chapter-part .chapter-grid {
+  display: none;        /* hidden by default */
+}
+
+.chapter-part.open .chapter-grid {
+  display: grid;        /* visible when .open is present */
+}
 
 /* Make it 2 columns on medium screens */
 @media (max-width: 960px) {
@@ -4551,6 +4559,53 @@ function onScroll() {
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
     onScroll();
+    /* =========================
+       Abridged Edition – Part header accordion
+       ========================= */
+    var chapterParts = Array.prototype.slice.call(
+      document.querySelectorAll(".chapter-part")
+    );
+
+    if (chapterParts.length) {
+      // Toggle individual parts on header click
+      chapterParts.forEach(function (part) {
+        var header = part.querySelector(".chapter-part-header");
+        var icon = part.querySelector(".chapter-part-toggle-icon");
+        if (!header) return;
+
+        header.addEventListener("click", function () {
+          var isOpen = part.classList.toggle("open");
+          if (icon) {
+            icon.textContent = isOpen ? "▼" : "►";
+          }
+        });
+      });
+
+      // Expand / Collapse all buttons
+      var expandAllBtn = document.getElementById("expand-all-summaries");
+      var collapseAllBtn = document.getElementById("collapse-all-summaries");
+
+      if (expandAllBtn) {
+        expandAllBtn.addEventListener("click", function () {
+          chapterParts.forEach(function (part) {
+            part.classList.add("open");
+            var icon = part.querySelector(".chapter-part-toggle-icon");
+            if (icon) icon.textContent = "▼";
+          });
+        });
+      }
+
+      if (collapseAllBtn) {
+        collapseAllBtn.addEventListener("click", function () {
+          chapterParts.forEach(function (part) {
+            part.classList.remove("open");
+            var icon = part.querySelector(".chapter-part-toggle-icon");
+            if (icon) icon.textContent = "►";
+          });
+        });
+      }
+    }
+  
   })();
 </script>
   <script>
