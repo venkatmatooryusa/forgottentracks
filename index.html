@@ -1437,6 +1437,98 @@
   backdrop-filter: blur(4px);
   white-space: nowrap;
 }
+/* Abridged Edition section wrapper */
+.chapter-summaries-section {
+  padding: 3.5rem 0;
+}
+
+/* Grid for chapter boxes under each Part */
+.chapter-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));  /* 3 columns on desktop */
+  gap: 1rem;
+  margin-top: 1.2rem;
+}
+
+/* Make it 2 columns on medium screens */
+@media (max-width: 960px) {
+  .chapter-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* 1 column on small screens (mobile) */
+@media (max-width: 640px) {
+  .chapter-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Individual chapter box */
+.chapter-card {
+  border-radius: 0.9rem;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  background: rgba(15, 23, 42, 0.98);   /* dark card to match your site */
+  padding: 0.9rem 0.95rem 1rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+/* Small “Chapter X” label */
+.chapter-card-meta {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--accent-strong);
+}
+
+/* Chapter title */
+.chapter-card-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+/* The “Read 1-page summary” pill */
+.chapter-card-open {
+  align-self: flex-start;
+  margin-top: 0.1rem;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid rgba(251, 191, 36, 0.8);
+  background: rgba(0, 0, 0, 0.7);
+  color: var(--accent-strong);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+/* Slight hover feedback */
+.chapter-card-open:hover {
+  background: rgba(251, 191, 36, 0.12);
+}
+
+/* Summary content block (initially hidden, as you already fixed) */
+.chapter-summary {
+  margin-top: 0.7rem;
+  font-size: 0.83rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+  border-top: 1px solid rgba(55, 65, 81, 0.9);
+  padding-top: 0.7rem;
+  display: none;  /* important: default hidden */
+}
+
+.chapter-summary ul {
+  padding-left: 1.1rem;
+  margin: 0.5rem 0 0.6rem 0;
+}
+
+.chapter-summary li {
+  margin-bottom: 0.25rem;
+}
 
 .chapter-nav-btn:hover {
   border-color: rgba(0, 0, 0, 0.25);
