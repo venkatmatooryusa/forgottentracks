@@ -4247,7 +4247,6 @@
     <span>⌂</span>
   </button>
 </div>
-
 <script>
   (function () {
     function scrollToId(id) {
@@ -4260,7 +4259,11 @@
     // navigation, CTAs, footer, floating home
     var navButtons = document.querySelectorAll("[data-target]");
     navButtons.forEach(function (btn) {
-      btn.addEventListener("click", function () {
+      btn.addEventListener("click", function (e) {
+        // if it's an <a>, prevent default "#" jump
+        if (btn.tagName.toLowerCase() === "a") {
+          e.preventDefault();
+        }
         var targetId = btn.getAttribute("data-target");
         if (targetId) {
           scrollToId(targetId);
@@ -4300,61 +4303,76 @@
         var tool = card.getAttribute("data-tool") || "";
         var msg = "";
         var level = "medium"; // default
-        var fillPct = (avg - 1) / 4 * 100; // 1–5 mapped to 0–100
+        var fillPct = ((avg - 1) / 4) * 100; // 1–5 mapped to 0–100
 
         if (tool === "golden-cage") {
           if (avg <= 2.4) {
-            msg = "Your Golden Cage risk is currently low – stay vigilant, but you still have room to design deliberately.";
+            msg =
+              "Your Golden Cage risk is currently low – stay vigilant, but you still have room to design deliberately.";
             level = "low";
           } else if (avg <= 3.5) {
-            msg = "You’re hovering in the Golden Cage zone – comfortable but uneasy. This is a good time to begin redesigning.";
+            msg =
+              "You’re hovering in the Golden Cage zone – comfortable but uneasy. This is a good time to begin redesigning.";
             level = "medium";
           } else {
-            msg = "Your answers suggest a high Golden Cage risk. The book’s early chapters on Sacred Debt and compliance will speak directly to this.";
+            msg =
+              "Your answers suggest a high Golden Cage risk. The book’s early chapters on Sacred Debt and compliance will speak directly to this.";
             level = "high";
           }
         } else if (tool === "rop") {
           if (avg <= 2.4) {
-            msg = "Your Return on Purpose feels weak right now – most of your effort seems driven by ROI and optics.";
+            msg =
+              "Your Return on Purpose feels weak right now – most of your effort seems driven by ROI and optics.";
             level = "low";
           } else if (avg <= 3.5) {
-            msg = "You’re partly aligned on ROP – some parts of your work matter deeply, others feel like pure transaction.";
+            msg =
+              "You’re partly aligned on ROP – some parts of your work matter deeply, others feel like pure transaction.";
             level = "medium";
           } else {
-            msg = "Your ROP alignment looks strong – you’re already anchoring decisions in something you care about long term.";
+            msg =
+              "Your ROP alignment looks strong – you’re already anchoring decisions in something you care about long term.";
             level = "high";
           }
         } else if (tool === "forgotten-track") {
           if (avg <= 2.4) {
-            msg = "Your Forgotten Track is still mostly fog – use the WHY / WHO / HOW exercises to name it more sharply.";
+            msg =
+              "Your Forgotten Track is still mostly fog – use the WHY / WHO / HOW exercises to name it more sharply.";
             level = "low";
           } else if (avg <= 3.5) {
-            msg = "You have a rough sense of your Forgotten Track, but it needs bolder experiments to become concrete.";
+            msg =
+              "You have a rough sense of your Forgotten Track, but it needs bolder experiments to become concrete.";
             level = "medium";
           } else {
-            msg = "You seem to have good clarity on your Forgotten Track – the next step is to deepen proof through real projects.";
+            msg =
+              "You seem to have good clarity on your Forgotten Track – the next step is to deepen proof through real projects.";
             level = "high";
           }
         } else if (tool === "portfolio") {
           if (avg <= 2.4) {
-            msg = "Your Portfolio of Purpose is mostly in your head. Start with one small, visible project that carries your signature.";
+            msg =
+              "Your Portfolio of Purpose is mostly in your head. Start with one small, visible project that carries your signature.";
             level = "low";
           } else if (avg <= 3.5) {
-            msg = "You have some proof of purpose, but it’s scattered. Curate and sharpen 2–3 flagship pieces.";
+            msg =
+              "You have some proof of purpose, but it’s scattered. Curate and sharpen 2–3 flagship pieces.";
             level = "medium";
           } else {
-            msg = "Your Portfolio of Purpose is already taking shape. The work now is to keep it coherent and evolving.";
+            msg =
+              "Your Portfolio of Purpose is already taking shape. The work now is to keep it coherent and evolving.";
             level = "high";
           }
         } else {
           if (avg <= 2.4) {
-            msg = "Your responses point to a weak alignment today – treat this as a starting baseline, not a verdict.";
+            msg =
+              "Your responses point to a weak alignment today – treat this as a starting baseline, not a verdict.";
             level = "low";
           } else if (avg <= 3.5) {
-            msg = "You’re in a mixed zone – some parts of your life are aligned, others want redesign.";
+            msg =
+              "You’re in a mixed zone – some parts of your life are aligned, others want redesign.";
             level = "medium";
           } else {
-            msg = "You’re showing strong alignment on this dimension – build on it deliberately.";
+            msg =
+              "You’re showing strong alignment on this dimension – build on it deliberately.";
             level = "high";
           }
         }
@@ -4365,7 +4383,8 @@
 
         // set bar
         if (barFill) {
-          barFill.style.width = Math.max(5, Math.min(100, fillPct)) + "%";
+          barFill.style.width =
+            Math.max(5, Math.min(100, fillPct)) + "%";
         }
         if (textEl) {
           textEl.textContent = msg;
@@ -4374,43 +4393,47 @@
     });
 
     // Lexicon search + clear + collapsible groups
+    var lexiconList = document.getElementById("lexicon-list");
     var searchInput = document.getElementById("lexicon-search");
     var clearBtn = document.getElementById("lexicon-clear");
-    var lexiconList = document.getElementById("lexicon-list");
     var emptyMsg = document.getElementById("lexicon-empty");
 
-    var groupTitles = lexiconList
-      ? Array.prototype.slice.call(lexiconList.querySelectorAll(".lexicon-group-title"))
-      : [];
     var groups = [];
+    if (lexiconList) {
+      var groupTitles = Array.prototype.slice.call(
+        lexiconList.querySelectorAll(".lexicon-group-title")
+      );
 
-    groupTitles.forEach(function (title, index) {
-      var grid = title.nextElementSibling;
-      if (!grid || !grid.classList.contains("lexicon-grid")) return;
-      groups.push({ title: title, grid: grid });
+      groupTitles.forEach(function (title, index) {
+        var grid = title.nextElementSibling;
+        if (!grid || !grid.classList.contains("lexicon-grid")) return;
+        groups.push({ title: title, grid: grid });
 
-      // default: first open, others collapsed
-      if (index === 0) {
-        grid.style.display = "";
-        title.querySelector(".lexicon-group-toggle").textContent = "▼";
-        title.dataset.open = "true";
-      } else {
-        grid.style.display = "none";
-        title.querySelector(".lexicon-group-toggle").textContent = "►";
-        title.dataset.open = "false";
-      }
+        // default: first open, others collapsed
+        if (index === 0) {
+          grid.style.display = "";
+          var t0 = title.querySelector(".lexicon-group-toggle");
+          if (t0) t0.textContent = "▼";
+          title.dataset.open = "true";
+        } else {
+          grid.style.display = "none";
+          var t1 = title.querySelector(".lexicon-group-toggle");
+          if (t1) t1.textContent = "►";
+          title.dataset.open = "false";
+        }
 
-      title.addEventListener("click", function () {
-        // do not toggle if search is active
-        if (searchInput && searchInput.value.trim() !== "") return;
+        title.addEventListener("click", function () {
+          // do not toggle if search is active
+          if (searchInput && searchInput.value.trim() !== "") return;
 
-        var open = title.dataset.open === "true";
-        title.dataset.open = open ? "false" : "true";
-        grid.style.display = open ? "none" : "";
-        var toggleIcon = title.querySelector(".lexicon-group-toggle");
-        if (toggleIcon) toggleIcon.textContent = open ? "►" : "▼";
+          var open = title.dataset.open === "true";
+          title.dataset.open = open ? "false" : "true";
+          grid.style.display = open ? "none" : "";
+          var toggleIcon = title.querySelector(".lexicon-group-toggle");
+          if (toggleIcon) toggleIcon.textContent = open ? "►" : "▼";
+        });
       });
-    });
+    }
 
     if (searchInput && lexiconList) {
       var items = Array.prototype.slice.call(
@@ -4448,8 +4471,10 @@
         items.forEach(function (item) {
           var term = item.getAttribute("data-term") || "";
           var body = item.textContent || "";
-          var match = !searchActive || normalise(term).indexOf(q) !== -1 ||
-                      normalise(body).indexOf(q) !== -1;
+          var match =
+            !searchActive ||
+            normalise(term).indexOf(q) !== -1 ||
+            normalise(body).indexOf(q) !== -1;
           item.style.display = match ? "" : "none";
           if (match) visibleCount++;
         });
@@ -4478,7 +4503,9 @@
         if (window.innerWidth > 768) return;
         e.preventDefault();
         var isShown = pill.classList.contains("show-tip");
-        conceptPills.forEach(function (p) { p.classList.remove("show-tip"); });
+        conceptPills.forEach(function (p) {
+          p.classList.remove("show-tip");
+        });
         if (!isShown) {
           pill.classList.add("show-tip");
         }
@@ -4489,99 +4516,76 @@
     document.addEventListener("click", function (e) {
       if (window.innerWidth > 768) return;
       if (!e.target.closest(".concept-pill")) {
-        conceptPills.forEach(function (p) { p.classList.remove("show-tip"); });
+        conceptPills.forEach(function (p) {
+          p.classList.remove("show-tip");
+        });
       }
     });
 
     // Active nav state + scroll progress
-    // Active nav state + scroll progress (group-based)
-var sections = [
-  "overview",          // FT Insight
-  "golden-cage",       // FT Insight
-  "key-ideas",         // FT Insight
-  "who",               // FT Insight
-  "inside",            // The Book
-  "deep-dive",         // Deep Dive: tools
-  "stories",           // Deep Dive: stories
-  "twelve-week-sprint",// Deep Dive: 12-week sprint
-  "lexicon",           // Deep Dive: lexicon
-  "author"             // About Author
-].map(function (id) {
-  var el = document.getElementById(id);
-  return { id: id, el: el };
-});
+    var sections = [
+      "overview",
+      "golden-cage",
+      "key-ideas",
+      "deep-dive",
+      "lexicon",
+      "who",
+      "inside",
+      "abridged-edition",
+      "author"
+    ].map(function (id) {
+      var el = document.getElementById(id);
+      return { id: id, el: el };
+    });
 
-// Map each section to a nav group
-var sectionGroups = {
-  "overview": "ft",
-  "golden-cage": "ft",
-  "key-ideas": "ft",
-  "who": "ft",
+    var navMap = {};
+    document.querySelectorAll(".nav button, .nav a").forEach(function (btn) {
+      var t = btn.getAttribute("data-target");
+      if (t) navMap[t] = btn;
+    });
 
-  "inside": "book",
+    var progressBar = document.getElementById("progress-bar");
 
-  "deep-dive": "deep",
-  "stories": "deep",
-  "twelve-week-sprint": "deep",
-  "lexicon": "deep",
+    function onScroll() {
+      var scrollY = window.scrollY || window.pageYOffset;
+      var docHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
+      var progress = docHeight > 0 ? (scrollY / docHeight) * 100 : 0;
+      if (progressBar) {
+        progressBar.style.width = progress + "%";
+      }
 
-  "author": "author"
-};
+      // active section
+      var current = null;
+      sections.forEach(function (s) {
+        if (!s.el) return;
+        var rect = s.el.getBoundingClientRect();
+        var top = rect.top;
+        var height = rect.height;
+        if (top <= 120 && top + height > 120) {
+          current = s.id;
+        }
+      });
 
-// Map group keys to nav buttons
-var navGroupButtons = {};
-document.querySelectorAll(".nav button[data-group]").forEach(function (btn) {
-  var g = btn.getAttribute("data-group");
-  if (g) navGroupButtons[g] = btn;
-});
-
-function onScroll() {
-  var scrollY = window.scrollY || window.pageYOffset;
-  var docHeight = document.documentElement.scrollHeight - window.innerHeight;
-  var progress = docHeight > 0 ? (scrollY / docHeight) * 100 : 0;
-  if (progressBar) {
-    progressBar.style.width = progress + "%";
-  }
-
-  // find current section
-  var current = null;
-  sections.forEach(function (s) {
-    if (!s.el) return;
-    var rect = s.el.getBoundingClientRect();
-    var top = rect.top;
-    var height = rect.height;
-    if (top <= 120 && top + height > 120) {
-      current = s.id;
+      Object.keys(navMap).forEach(function (id) {
+        navMap[id].classList.remove("nav-active");
+      });
+      if (current && navMap[current]) {
+        navMap[current].classList.add("nav-active");
+      }
     }
-  });
-
-  // clear all nav states
-  Object.keys(navGroupButtons).forEach(function (g) {
-    navGroupButtons[g].classList.remove("nav-active");
-  });
-
-  // set active based on group
-  if (current) {
-    var group = sectionGroups[current] || null;
-    if (group && navGroupButtons[group]) {
-      navGroupButtons[group].classList.add("nav-active");
-    }
-  }
-}
-
 
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
     onScroll();
 
-        /* =========================
+    /* =========================
        Abridged Edition – Part header accordion
        ========================= */
     (function setupAbridgedAccordion() {
       var chapterParts = Array.prototype.slice.call(
         document.querySelectorAll(".chapter-part")
       );
-
       if (!chapterParts.length) return;
 
       // Individual Part toggle
@@ -4623,7 +4627,30 @@ function onScroll() {
       }
     })();
 
+    /* =========================
+       Hover delay for nav dropdowns
+       (safe no-op if there are no .nav-item / .nav-dropdown elements)
+       ========================= */
+    document.querySelectorAll(".nav-item").forEach(function (item) {
+      var hideTimeout;
+      var dropdown = item.querySelector(".nav-dropdown");
+      if (!dropdown) return;
+
+      item.addEventListener("mouseenter", function () {
+        clearTimeout(hideTimeout);
+        item.classList.add("hover-open");
+      });
+
+      item.addEventListener("mouseleave", function () {
+        hideTimeout = setTimeout(function () {
+          item.classList.remove("hover-open");
+        }, 220); // adjust for more/less delay
+      });
+    });
+  })();
 </script>
+
+
   <script>
 document.addEventListener('DOMContentLoaded', function () {
   const cards = Array.from(document.querySelectorAll('.chapter-card'));
