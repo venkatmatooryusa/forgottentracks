@@ -1648,6 +1648,87 @@
   background: rgba(20, 20, 20, 0.9);
   color: var(--accent-strong);
 }
+/* =====================================
+   CLEAN UNIFIED LOOK FOR ABRIDGED EDITION
+   ===================================== */
+
+/* Expand / Collapse All — match pill-primary */
+.chapter-controls-btn {
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.chapter-controls-btn.pill-primary {
+  margin-bottom: 0.8rem;
+}
+
+/* Part Headers */
+.chapter-part-header {
+  width: 100%;
+  text-align: left;
+  padding: 0.9rem 1.1rem;
+  margin-top: 1.8rem;
+  border-radius: 0.8rem;
+  background: rgba(15, 23, 42, 0.85);            /* unified dark background */
+  border: 1px solid rgba(148, 163, 184, 0.4);    /* soft slate border */
+  color: var(--text-main);
+  font-size: 0.92rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.chapter-part-header:hover {
+  background: rgba(30, 41, 59, 0.9);    /* subtle hover darken */
+}
+
+/* The label + meta text inside headers */
+.chapter-part-label {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--text-main);
+}
+
+.chapter-part-meta {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.chapter-part-toggle-icon {
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+
+/* Chapter Grid background cleanup */
+.chapter-grid {
+  background: transparent;    /* removes unwanted gray/blue block */
+  border: none;
+  padding-top: 1rem;
+}
+
+/* Each chapter-card cleanup */
+.chapter-card {
+  background: rgba(15, 23, 42, 0.98);      /* unify card background */
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  border-radius: 0.9rem;
+}
+
+/* Chapter title + meta */
+.chapter-card-title {
+  color: var(--text-main);
+}
+
+.chapter-card-meta {
+  color: var(--accent-strong);
+}
+
+/* Summary block cleanup */
+.chapter-summary {
+  background: transparent;     /* make summary match card, not add new panel */
+  border-top: 1px solid rgba(55, 65, 81, 0.6);
+}
 
   </style>
 </head>
