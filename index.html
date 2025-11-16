@@ -4817,6 +4817,28 @@ document.querySelectorAll('.nav-item').forEach(item => {
 });  
 });
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  var chapterParts = Array.prototype.slice.call(
+    document.querySelectorAll(".chapter-part")
+  );
+
+  if (!chapterParts.length) return;
+
+  chapterParts.forEach(function (part) {
+    var header = part.querySelector(".chapter-part-header");
+    var icon   = part.querySelector(".chapter-part-toggle-icon");
+    if (!header) return;
+
+    header.addEventListener("click", function () {
+      var isOpen = part.classList.toggle("open");
+      if (icon) {
+        icon.textContent = isOpen ? "▼" : "►";
+      }
+    });
+  });
+});
+</script>
 
 </body>
 </html>
