@@ -4737,8 +4737,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Add nav to the end of the summary content
     summary.appendChild(nav);
   });
-});
-</script>
+
 // --- HOVER DELAY FOR NAV DROPDOWNS ---
 document.querySelectorAll('.nav-item').forEach(item => {
   let hideTimeout;
@@ -4758,7 +4757,9 @@ document.querySelectorAll('.nav-item').forEach(item => {
       item.classList.remove('hover-open');
     }, 220);   // <--- Increase this for longer hover time (200–350ms ideal)
   });
+});  
 });
+</script>
 
 </body>
 </html>
