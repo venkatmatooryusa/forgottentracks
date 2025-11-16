@@ -1533,6 +1533,13 @@
 .chapter-nav-btn:hover {
   border-color: rgba(0, 0, 0, 0.25);
 }
+/* Support hover-intent class */
+.nav-item.hover-open .nav-dropdown {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
 
   </style>
 </head>
@@ -4486,6 +4493,26 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 </script>
+// --- HOVER DELAY FOR NAV DROPDOWNS ---
+document.querySelectorAll('.nav-item').forEach(item => {
+  let hideTimeout;
+
+  const dropdown = item.querySelector('.nav-dropdown');
+  if (!dropdown) return;
+
+  // Open instantly on hover
+  item.addEventListener('mouseenter', () => {
+    clearTimeout(hideTimeout);
+    item.classList.add('hover-open');
+  });
+
+  // Delay the closing
+  item.addEventListener('mouseleave', () => {
+    hideTimeout = setTimeout(() => {
+      item.classList.remove('hover-open');
+    }, 220);   // <--- Increase this for longer hover time (200–350ms ideal)
+  });
+});
 
 </body>
 </html>
