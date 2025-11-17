@@ -4189,451 +4189,406 @@
     <span>⌂</span>
   </button>
 </div>
+
 <script>
-  (function () {
-    function scrollToId(id) {
-      var el = document.getElementById(id);
-      if (el) {
-        el.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
+document.addEventListener("DOMContentLoaded", function () {
+  /* =========================
+     Smooth scroll for [data-target]
+     ========================= */
+  function scrollToId(id) {
+    var el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
     }
+  }
 
-    // navigation, CTAs, footer, floating home
-    var navButtons = document.querySelectorAll("[data-target]");
-    navButtons.forEach(function (btn) {
-      btn.addEventListener("click", function (e) {
-        // if it's an <a>, prevent default "#" jump
-        if (btn.tagName.toLowerCase() === "a") {
-          e.preventDefault();
-        }
-        var targetId = btn.getAttribute("data-target");
-        if (targetId) {
-          scrollToId(targetId);
-        }
-      });
-    });
-
-    // Year updater
-    var y = document.getElementById("year");
-    if (y) y.textContent = new Date().getFullYear();
-
-    // Assessment tools
-    var cards = document.querySelectorAll(".assessment-card");
-    cards.forEach(function (card) {
-      var button = card.querySelector(".assessment-eval");
-      var resultContainer = card.querySelector(".assessment-result");
-      if (!button || !resultContainer) return;
-
-      var barFill = resultContainer.querySelector(".assessment-result-bar-fill");
-      var textEl = resultContainer.querySelector(".assessment-result-text");
-
-      button.addEventListener("click", function () {
-        var inputs = card.querySelectorAll(".assessment-input");
-        var total = 0;
-        var count = 0;
-
-        inputs.forEach(function (sel) {
-          var v = parseInt(sel.value, 10);
-          if (!isNaN(v)) {
-            total += v;
-            count += 1;
-          }
-        });
-
-        if (!count) return;
-        var avg = total / count;
-        var tool = card.getAttribute("data-tool") || "";
-        var msg = "";
-        var level = "medium"; // default
-        var fillPct = ((avg - 1) / 4) * 100; // 1–5 mapped to 0–100
-
-        if (tool === "golden-cage") {
-          if (avg <= 2.4) {
-            msg =
-              "Your Golden Cage risk is currently low – stay vigilant, but you still have room to design deliberately.";
-            level = "low";
-          } else if (avg <= 3.5) {
-            msg =
-              "You’re hovering in the Golden Cage zone – comfortable but uneasy. This is a good time to begin redesigning.";
-            level = "medium";
-          } else {
-            msg =
-              "Your answers suggest a high Golden Cage risk. The book’s early chapters on Sacred Debt and compliance will speak directly to this.";
-            level = "high";
-          }
-        } else if (tool === "rop") {
-          if (avg <= 2.4) {
-            msg =
-              "Your Return on Purpose feels weak right now – most of your effort seems driven by ROI and optics.";
-            level = "low";
-          } else if (avg <= 3.5) {
-            msg =
-              "You’re partly aligned on ROP – some parts of your work matter deeply, others feel like pure transaction.";
-            level = "medium";
-          } else {
-            msg =
-              "Your ROP alignment looks strong – you’re already anchoring decisions in something you care about long term.";
-            level = "high";
-          }
-        } else if (tool === "forgotten-track") {
-          if (avg <= 2.4) {
-            msg =
-              "Your Forgotten Track is still mostly fog – use the WHY / WHO / HOW exercises to name it more sharply.";
-            level = "low";
-          } else if (avg <= 3.5) {
-            msg =
-              "You have a rough sense of your Forgotten Track, but it needs bolder experiments to become concrete.";
-            level = "medium";
-          } else {
-            msg =
-              "You seem to have good clarity on your Forgotten Track – the next step is to deepen proof through real projects.";
-            level = "high";
-          }
-        } else if (tool === "portfolio") {
-          if (avg <= 2.4) {
-            msg =
-              "Your Portfolio of Purpose is mostly in your head. Start with one small, visible project that carries your signature.";
-            level = "low";
-          } else if (avg <= 3.5) {
-            msg =
-              "You have some proof of purpose, but it’s scattered. Curate and sharpen 2–3 flagship pieces.";
-            level = "medium";
-          } else {
-            msg =
-              "Your Portfolio of Purpose is already taking shape. The work now is to keep it coherent and evolving.";
-            level = "high";
-          }
-        } else {
-          if (avg <= 2.4) {
-            msg =
-              "Your responses point to a weak alignment today – treat this as a starting baseline, not a verdict.";
-            level = "low";
-          } else if (avg <= 3.5) {
-            msg =
-              "You’re in a mixed zone – some parts of your life are aligned, others want redesign.";
-            level = "medium";
-          } else {
-            msg =
-              "You’re showing strong alignment on this dimension – build on it deliberately.";
-            level = "high";
-          }
-        }
-
-        // set classes
-        resultContainer.classList.remove("low", "medium", "high");
-        resultContainer.classList.add(level);
-
-        // set bar
-        if (barFill) {
-          barFill.style.width =
-            Math.max(5, Math.min(100, fillPct)) + "%";
-        }
-        if (textEl) {
-          textEl.textContent = msg;
-        }
-      });
-    });
-
-    // Lexicon search + clear + collapsible groups
-    var lexiconList = document.getElementById("lexicon-list");
-    var searchInput = document.getElementById("lexicon-search");
-    var clearBtn = document.getElementById("lexicon-clear");
-    var emptyMsg = document.getElementById("lexicon-empty");
-
-    var groups = [];
-    if (lexiconList) {
-      var groupTitles = Array.prototype.slice.call(
-        lexiconList.querySelectorAll(".lexicon-group-title")
-      );
-
-      groupTitles.forEach(function (title, index) {
-        var grid = title.nextElementSibling;
-        if (!grid || !grid.classList.contains("lexicon-grid")) return;
-        groups.push({ title: title, grid: grid });
-
-        // default: first open, others collapsed
-        if (index === 0) {
-          grid.style.display = "";
-          var t0 = title.querySelector(".lexicon-group-toggle");
-          if (t0) t0.textContent = "▼";
-          title.dataset.open = "true";
-        } else {
-          grid.style.display = "none";
-          var t1 = title.querySelector(".lexicon-group-toggle");
-          if (t1) t1.textContent = "►";
-          title.dataset.open = "false";
-        }
-
-        title.addEventListener("click", function () {
-          // do not toggle if search is active
-          if (searchInput && searchInput.value.trim() !== "") return;
-
-          var open = title.dataset.open === "true";
-          title.dataset.open = open ? "false" : "true";
-          grid.style.display = open ? "none" : "";
-          var toggleIcon = title.querySelector(".lexicon-group-toggle");
-          if (toggleIcon) toggleIcon.textContent = open ? "►" : "▼";
-        });
-      });
-    }
-
-    if (searchInput && lexiconList) {
-      var items = Array.prototype.slice.call(
-        lexiconList.querySelectorAll(".lexicon-item")
-      );
-
-      function normalise(text) {
-        return (text || "").toLowerCase();
-      }
-
-      function filterLexicon() {
-        var q = normalise(searchInput.value);
-        var visibleCount = 0;
-        var searchActive = q.length > 0;
-
-        // when searching, open all groups
-        if (searchActive) {
-          groups.forEach(function (g) {
-            g.grid.style.display = "";
-            g.title.dataset.open = "true";
-            var t = g.title.querySelector(".lexicon-group-toggle");
-            if (t) t.textContent = "▼";
-          });
-        } else {
-          // restore default open/close if needed
-          groups.forEach(function (g, index) {
-            if (g.title.dataset.open === "true") {
-              g.grid.style.display = "";
-            } else if (index !== 0) {
-              g.grid.style.display = "none";
-            }
-          });
-        }
-
-        items.forEach(function (item) {
-          var term = item.getAttribute("data-term") || "";
-          var body = item.textContent || "";
-          var match =
-            !searchActive ||
-            normalise(term).indexOf(q) !== -1 ||
-            normalise(body).indexOf(q) !== -1;
-          item.style.display = match ? "" : "none";
-          if (match) visibleCount++;
-        });
-
-        if (emptyMsg) {
-          emptyMsg.style.display = visibleCount ? "none" : "block";
-        }
-      }
-
-      searchInput.addEventListener("input", filterLexicon);
-
-      if (clearBtn) {
-        clearBtn.addEventListener("click", function () {
-          searchInput.value = "";
-          filterLexicon();
-          searchInput.focus();
-        });
-      }
-    }
-
-    // Concept pill tap/toggle for mobile
-    var conceptPills = document.querySelectorAll(".concept-pill");
-    conceptPills.forEach(function (pill) {
-      pill.addEventListener("click", function (e) {
-        // On wider screens, let hover dominate; only toggle for small widths
-        if (window.innerWidth > 768) return;
+  var navButtons = document.querySelectorAll("[data-target]");
+  navButtons.forEach(function (btn) {
+    btn.addEventListener("click", function (e) {
+      if (btn.tagName.toLowerCase() === "a") {
         e.preventDefault();
-        var isShown = pill.classList.contains("show-tip");
-        conceptPills.forEach(function (p) {
-          p.classList.remove("show-tip");
-        });
-        if (!isShown) {
-          pill.classList.add("show-tip");
-        }
-      });
-    });
-
-    // Close concept tip when clicking outside on mobile
-    document.addEventListener("click", function (e) {
-      if (window.innerWidth > 768) return;
-      if (!e.target.closest(".concept-pill")) {
-        conceptPills.forEach(function (p) {
-          p.classList.remove("show-tip");
-        });
+      }
+      var targetId = btn.getAttribute("data-target");
+      if (targetId) {
+        scrollToId(targetId);
       }
     });
+  });
 
-    // Active nav state + scroll progress
-    var sections = [
-      "overview",
-      "golden-cage",
-      "key-ideas",
-      "deep-dive",
-      "lexicon",
-      "who",
-      "inside",
-      "abridged-edition",
-      "author"
-    ].map(function (id) {
-      var el = document.getElementById(id);
-      return { id: id, el: el };
-    });
+  /* =========================
+     Year updater in footer
+     ========================= */
+  var y = document.getElementById("year");
+  if (y) y.textContent = new Date().getFullYear();
 
-    var navMap = {};
-    document.querySelectorAll(".nav button, .nav a").forEach(function (btn) {
-      var t = btn.getAttribute("data-target");
-      if (t) navMap[t] = btn;
-    });
+  /* =========================
+     Deep-dive assessment tools
+     ========================= */
+  var assessmentCards = document.querySelectorAll(".assessment-card");
+  assessmentCards.forEach(function (card) {
+    var button = card.querySelector(".assessment-eval");
+    var resultContainer = card.querySelector(".assessment-result");
+    if (!button || !resultContainer) return;
 
-    var progressBar = document.getElementById("progress-bar");
+    var barFill = resultContainer.querySelector(".assessment-result-bar-fill");
+    var textEl = resultContainer.querySelector(".assessment-result-text");
 
-    function onScroll() {
-      var scrollY = window.scrollY || window.pageYOffset;
-      var docHeight =
-        document.documentElement.scrollHeight - window.innerHeight;
-      var progress = docHeight > 0 ? (scrollY / docHeight) * 100 : 0;
-      if (progressBar) {
-        progressBar.style.width = progress + "%";
-      }
+    button.addEventListener("click", function () {
+      var inputs = card.querySelectorAll(".assessment-input");
+      var total = 0;
+      var count = 0;
 
-      // active section
-      var current = null;
-      sections.forEach(function (s) {
-        if (!s.el) return;
-        var rect = s.el.getBoundingClientRect();
-        var top = rect.top;
-        var height = rect.height;
-        if (top <= 120 && top + height > 120) {
-          current = s.id;
+      inputs.forEach(function (sel) {
+        var v = parseInt(sel.value, 10);
+        if (!isNaN(v)) {
+          total += v;
+          count += 1;
         }
       });
 
-      Object.keys(navMap).forEach(function (id) {
-        navMap[id].classList.remove("nav-active");
+      if (!count) return;
+      var avg = total / count;
+      var tool = card.getAttribute("data-tool") || "";
+      var msg = "";
+      var level = "medium";
+      var fillPct = ((avg - 1) / 4) * 100;
+
+      if (tool === "golden-cage") {
+        if (avg <= 2.4) {
+          msg =
+            "Your Golden Cage risk is currently low – stay vigilant, but you still have room to design deliberately.";
+          level = "low";
+        } else if (avg <= 3.5) {
+          msg =
+            "You’re hovering in the Golden Cage zone – comfortable but uneasy. This is a good time to begin redesigning.";
+          level = "medium";
+        } else {
+          msg =
+            "Your answers suggest a high Golden Cage risk. The book’s early chapters on Sacred Debt and compliance will speak directly to this.";
+          level = "high";
+        }
+      } else if (tool === "rop") {
+        if (avg <= 2.4) {
+          msg =
+            "Your Return on Purpose feels weak right now – most of your effort seems driven by ROI and optics.";
+          level = "low";
+        } else if (avg <= 3.5) {
+          msg =
+            "You’re partly aligned on ROP – some parts of your work matter deeply, others feel like pure transaction.";
+          level = "medium";
+        } else {
+          msg =
+            "Your ROP alignment looks strong – you’re already anchoring decisions in something you care about long term.";
+          level = "high";
+        }
+      } else if (tool === "forgotten-track") {
+        if (avg <= 2.4) {
+          msg =
+            "Your Forgotten Track is still mostly fog – use the WHY / WHO / HOW exercises to name it more sharply.";
+          level = "low";
+        } else if (avg <= 3.5) {
+          msg =
+            "You have a rough sense of your Forgotten Track, but it needs bolder experiments to become concrete.";
+          level = "medium";
+        } else {
+          msg =
+            "You seem to have good clarity on your Forgotten Track – the next step is to deepen proof through real projects.";
+          level = "high";
+        }
+      } else if (tool === "portfolio") {
+        if (avg <= 2.4) {
+          msg =
+            "Your Portfolio of Purpose is mostly in your head. Start with one small, visible project that carries your signature.";
+          level = "low";
+        } else if (avg <= 3.5) {
+          msg =
+            "You have some proof of purpose, but it’s scattered. Curate and sharpen 2–3 flagship pieces.";
+          level = "medium";
+        } else {
+          msg =
+            "Your Portfolio of Purpose is already taking shape. The work now is to keep it coherent and evolving.";
+          level = "high";
+        }
+      } else {
+        if (avg <= 2.4) {
+          msg =
+            "Your responses point to a weak alignment today – treat this as a starting baseline, not a verdict.";
+          level = "low";
+        } else if (avg <= 3.5) {
+          msg =
+            "You’re in a mixed zone – some parts of your life are aligned, others want redesign.";
+          level = "medium";
+        } else {
+          msg =
+            "You’re showing strong alignment on this dimension – build on it deliberately.";
+          level = "high";
+        }
+      }
+
+      resultContainer.classList.remove("low", "medium", "high");
+      resultContainer.classList.add(level);
+
+      if (barFill) {
+        barFill.style.width =
+          Math.max(5, Math.min(100, fillPct)) + "%";
+      }
+      if (textEl) {
+        textEl.textContent = msg;
+      }
+    });
+  });
+
+  /* =========================
+     Lexicon search + collapsible groups
+     ========================= */
+  var lexiconList = document.getElementById("lexicon-list");
+  var searchInput = document.getElementById("lexicon-search");
+  var clearBtn = document.getElementById("lexicon-clear");
+  var emptyMsg = document.getElementById("lexicon-empty");
+  var groups = [];
+
+  if (lexiconList) {
+    var groupTitles = Array.prototype.slice.call(
+      lexiconList.querySelectorAll(".lexicon-group-title")
+    );
+
+    groupTitles.forEach(function (title, index) {
+      var grid = title.nextElementSibling;
+      if (!grid || !grid.classList.contains("lexicon-grid")) return;
+      groups.push({ title: title, grid: grid });
+
+      // default: first open, others collapsed
+      if (index === 0) {
+        grid.style.display = "";
+        var t0 = title.querySelector(".lexicon-group-toggle");
+        if (t0) t0.textContent = "▼";
+        title.dataset.open = "true";
+      } else {
+        grid.style.display = "none";
+        var t1 = title.querySelector(".lexicon-group-toggle");
+        if (t1) t1.textContent = "►";
+        title.dataset.open = "false";
+      }
+
+      title.addEventListener("click", function () {
+        // do not toggle if search is active
+        if (searchInput && searchInput.value.trim() !== "") return;
+
+        var open = title.dataset.open === "true";
+        title.dataset.open = open ? "false" : "true";
+        grid.style.display = open ? "none" : "";
+        var toggleIcon = title.querySelector(".lexicon-group-toggle");
+        if (toggleIcon) toggleIcon.textContent = open ? "►" : "▼";
       });
-      if (current && navMap[current]) {
-        navMap[current].classList.add("nav-active");
+    });
+  }
+
+  if (searchInput && lexiconList) {
+    var items = Array.prototype.slice.call(
+      lexiconList.querySelectorAll(".lexicon-item")
+    );
+
+    function normalise(text) {
+      return (text || "").toLowerCase();
+    }
+
+    function filterLexicon() {
+      var q = normalise(searchInput.value);
+      var visibleCount = 0;
+      var searchActive = q.length > 0;
+
+      if (searchActive) {
+        groups.forEach(function (g) {
+          g.grid.style.display = "";
+          g.title.dataset.open = "true";
+          var t = g.title.querySelector(".lexicon-group-toggle");
+          if (t) t.textContent = "▼";
+        });
+      } else {
+        groups.forEach(function (g, index) {
+          if (g.title.dataset.open === "true") {
+            g.grid.style.display = "";
+          } else if (index !== 0) {
+            g.grid.style.display = "none";
+          }
+        });
+      }
+
+      items.forEach(function (item) {
+        var term = item.getAttribute("data-term") || "";
+        var body = item.textContent || "";
+        var match =
+          !searchActive ||
+          normalise(term).indexOf(q) !== -1 ||
+          normalise(body).indexOf(q) !== -1;
+        item.style.display = match ? "" : "none";
+        if (match) visibleCount++;
+      });
+
+      if (emptyMsg) {
+        emptyMsg.style.display = visibleCount ? "none" : "block";
       }
     }
 
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    onScroll();
+    searchInput.addEventListener("input", filterLexicon);
 
-    /* =========================
-       Abridged Edition – Part header accordion
-       ========================= */
-    (function setupAbridgedAccordion() {
-      var chapterParts = Array.prototype.slice.call(
-        document.querySelectorAll(".chapter-part")
-      );
-      if (!chapterParts.length) return;
-
-      // Individual Part toggle
-      chapterParts.forEach(function (part) {
-        var header = part.querySelector(".chapter-part-header");
-        var icon = part.querySelector(".chapter-part-toggle-icon");
-        if (!header) return;
-
-        header.addEventListener("click", function () {
-          var isOpen = part.classList.toggle("open");
-          if (icon) {
-            icon.textContent = isOpen ? "▼" : "►";
-          }
-        });
+    if (clearBtn) {
+      clearBtn.addEventListener("click", function () {
+        searchInput.value = "";
+        filterLexicon();
+        searchInput.focus();
       });
+    }
+  }
 
-      // Expand / Collapse All buttons
-      var expandAllBtn = document.getElementById("expand-all-summaries");
-      var collapseAllBtn = document.getElementById("collapse-all-summaries");
-
-      if (expandAllBtn) {
-        expandAllBtn.addEventListener("click", function () {
-          chapterParts.forEach(function (part) {
-            part.classList.add("open");
-            var icon = part.querySelector(".chapter-part-toggle-icon");
-            if (icon) icon.textContent = "▼";
-          });
-        });
+  /* =========================
+     Concept pill tap/toggle (mobile)
+     ========================= */
+  var conceptPills = document.querySelectorAll(".concept-pill");
+  conceptPills.forEach(function (pill) {
+    pill.addEventListener("click", function (e) {
+      if (window.innerWidth > 768) return;
+      e.preventDefault();
+      var isShown = pill.classList.contains("show-tip");
+      conceptPills.forEach(function (p) {
+        p.classList.remove("show-tip");
+      });
+      if (!isShown) {
+        pill.classList.add("show-tip");
       }
-
-      if (collapseAllBtn) {
-        collapseAllBtn.addEventListener("click", function () {
-          chapterParts.forEach(function (part) {
-            part.classList.remove("open");
-            var icon = part.querySelector(".chapter-part-toggle-icon");
-            if (icon) icon.textContent = "►";
-          });
-        });
-      }
-    })();
-
-    /* =========================
-       Hover delay for nav dropdowns
-       (safe no-op if there are no .nav-item / .nav-dropdown elements)
-       ========================= */
-    document.querySelectorAll(".nav-item").forEach(function (item) {
-      var hideTimeout;
-      var dropdown = item.querySelector(".nav-dropdown");
-      if (!dropdown) return;
-
-      item.addEventListener("mouseenter", function () {
-        clearTimeout(hideTimeout);
-        item.classList.add("hover-open");
-      });
-
-      item.addEventListener("mouseleave", function () {
-        hideTimeout = setTimeout(function () {
-          item.classList.remove("hover-open");
-        }, 220); // adjust for more/less delay
-      });
     });
-  })();
-</script>
+  });
 
+  document.addEventListener("click", function (e) {
+    if (window.innerWidth > 768) return;
+    if (!e.target.closest(".concept-pill")) {
+      conceptPills.forEach(function (p) {
+        p.classList.remove("show-tip");
+      });
+    }
+  });
 
-  <script>
-document.addEventListener('DOMContentLoaded', function () {
-  const cards = Array.from(document.querySelectorAll('.chapter-card'));
-  const expandAllBtn = document.getElementById('expand-all-summaries');
-  const collapseAllBtn = document.getElementById('collapse-all-summaries');
+  /* =========================
+     Active nav state + scroll progress
+     ========================= */
+  var sections = [
+    "overview",
+    "golden-cage",
+    "key-ideas",
+    "deep-dive",
+    "lexicon",
+    "who",
+    "inside",
+    "abridged-edition",
+    "author"
+  ].map(function (id) {
+    return { id: id, el: document.getElementById(id) };
+  });
+
+  var navMap = {};
+  document.querySelectorAll(".nav button, .nav a").forEach(function (btn) {
+    var t = btn.getAttribute("data-target");
+    if (t) navMap[t] = btn;
+  });
+
+  var progressBar = document.getElementById("progress-bar");
+
+  function onScroll() {
+    var scrollY = window.scrollY || window.pageYOffset;
+    var docHeight =
+      document.documentElement.scrollHeight - window.innerHeight;
+    var progress = docHeight > 0 ? (scrollY / docHeight) * 100 : 0;
+    if (progressBar) {
+      progressBar.style.width = progress + "%";
+    }
+
+    var current = null;
+    sections.forEach(function (s) {
+      if (!s.el) return;
+      var rect = s.el.getBoundingClientRect();
+      var top = rect.top;
+      var height = rect.height;
+      if (top <= 120 && top + height > 120) {
+        current = s.id;
+      }
+    });
+
+    Object.keys(navMap).forEach(function (id) {
+      navMap[id].classList.remove("nav-active");
+    });
+    if (current && navMap[current]) {
+      navMap[current].classList.add("nav-active");
+    }
+  }
+
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll);
+  onScroll();
+
+  /* =========================
+     Abridged Edition – Parts & summaries
+     ========================= */
+  var chapterParts = Array.prototype.slice.call(
+    document.querySelectorAll(".chapter-part")
+  );
+  var cards = Array.prototype.slice.call(
+    document.querySelectorAll(".chapter-card")
+  );
+  var expandAllBtn = document.getElementById("expand-all-summaries");
+  var collapseAllBtn = document.getElementById("collapse-all-summaries");
+
+  function setPartOpen(part, open) {
+    part.classList.toggle("open", open);
+    var icon = part.querySelector(".chapter-part-toggle-icon");
+    if (icon) {
+      icon.textContent = open ? "▼" : "►";
+    }
+  }
+
+  chapterParts.forEach(function (part) {
+    var header = part.querySelector(".chapter-part-header");
+    if (!header) return;
+
+    header.addEventListener("click", function () {
+      var isOpen = part.classList.contains("open");
+      setPartOpen(part, !isOpen);
+    });
+  });
 
   function openSummary(card) {
-    const btn = card.querySelector('.chapter-card-open');
-    const summary = card.querySelector('.chapter-summary');
+    var btn = card.querySelector(".chapter-card-open");
+    var summary = card.querySelector(".chapter-summary");
     if (!btn || !summary) return;
 
-    summary.style.display = 'block';
-    btn.setAttribute('aria-expanded', 'true');
-    const labelSpan = btn.querySelector('span');
-    if (labelSpan) labelSpan.textContent = 'Hide summary';
+    summary.style.display = "block";
+    btn.setAttribute("aria-expanded", "true");
+    var labelSpan = btn.querySelector("span");
+    if (labelSpan) labelSpan.textContent = "Hide summary";
   }
 
   function closeSummary(card) {
-    const btn = card.querySelector('.chapter-card-open');
-    const summary = card.querySelector('.chapter-summary');
+    var btn = card.querySelector(".chapter-card-open");
+    var summary = card.querySelector(".chapter-summary");
     if (!btn || !summary) return;
 
-    summary.style.display = 'none';
-    btn.setAttribute('aria-expanded', 'false');
-    const labelSpan = btn.querySelector('span');
-    if (labelSpan) labelSpan.textContent = 'Read 1-page summary';
+    summary.style.display = "none";
+    btn.setAttribute("aria-expanded", "false");
+    var labelSpan = btn.querySelector("span");
+    if (labelSpan) labelSpan.textContent = "Read 1-page summary";
   }
 
-  // 1) Per-card toggle for "Read 1-page summary"
+  // Per-card toggle for “Read 1-page summary”
   cards.forEach(function (card) {
-    const btn = card.querySelector('.chapter-card-open');
-    const summary = card.querySelector('.chapter-summary');
+    var btn = card.querySelector(".chapter-card-open");
+    var summary = card.querySelector(".chapter-summary");
     if (!btn || !summary) return;
 
-    // Ensure default closed state if inline style not set
     if (!summary.style.display) {
-      summary.style.display = 'none';
+      summary.style.display = "none";
     }
 
-    btn.addEventListener('click', function () {
-      const isOpen = summary.style.display === 'block';
+    btn.addEventListener("click", function () {
+      var isOpen = summary.style.display === "block";
       if (isOpen) {
         closeSummary(card);
       } else {
@@ -4642,131 +4597,113 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  // 2) Expand All / Collapse All buttons
-  function setAll(open) {
+  function setAllSummaries(open) {
     cards.forEach(function (card) {
-      if (open) {
-        openSummary(card);
-      } else {
-        closeSummary(card);
-      }
+      if (open) openSummary(card);
+      else closeSummary(card);
+    });
+  }
+
+  function setAllParts(open) {
+    chapterParts.forEach(function (part) {
+      setPartOpen(part, open);
     });
   }
 
   if (expandAllBtn) {
-    expandAllBtn.addEventListener('click', function () {
-      setAll(true);
+    expandAllBtn.addEventListener("click", function () {
+      setAllParts(true);
+      setAllSummaries(true);
     });
   }
 
   if (collapseAllBtn) {
-    collapseAllBtn.addEventListener('click', function () {
-      setAll(false);
+    collapseAllBtn.addEventListener("click", function () {
+      setAllSummaries(false);
+      setAllParts(false);
     });
   }
 
-  // 3) Deep-link support: #ch-01, #ch-10, etc.
+  // Deep-link: #ch-01 etc.
   (function handleDeepLink() {
-    const hash = window.location.hash.replace('#', '');
+    var hash = window.location.hash.replace("#", "");
     if (!hash) return;
 
-    const targetCard = document.getElementById(hash);
+    var targetCard = document.getElementById(hash);
     if (!targetCard) return;
 
+    var part = targetCard.closest(".chapter-part");
+    if (part) setPartOpen(part, true);
+
     openSummary(targetCard);
-    targetCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    targetCard.scrollIntoView({ behavior: "smooth", block: "start" });
   })();
 
-  // 4) Add Previous / Next chapter buttons inside each summary
+  // Previous / Next chapter buttons
   cards.forEach(function (card, index) {
-    const summary = card.querySelector('.chapter-summary');
+    var summary = card.querySelector(".chapter-summary");
     if (!summary) return;
 
-    const nav = document.createElement('div');
-    nav.className = 'chapter-nav';
+    var nav = document.createElement("div");
+    nav.className = "chapter-nav";
 
-    // Previous chapter
     if (index > 0) {
-      const prevBtn = document.createElement('button');
-      prevBtn.type = 'button';
-      prevBtn.className = 'chapter-nav-btn chapter-nav-prev';
-      prevBtn.textContent = 'Previous chapter';
-
-      prevBtn.addEventListener('click', function () {
-        const prevCard = cards[index - 1];
+      var prevBtn = document.createElement("button");
+      prevBtn.type = "button";
+      prevBtn.className = "chapter-nav-btn chapter-nav-prev";
+      prevBtn.textContent = "Previous chapter";
+      prevBtn.addEventListener("click", function () {
+        var prevCard = cards[index - 1];
         if (!prevCard) return;
+        var prevPart = prevCard.closest(".chapter-part");
+        if (prevPart) setPartOpen(prevPart, true);
         openSummary(prevCard);
-        prevCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        prevCard.scrollIntoView({ behavior: "smooth", block: "start" });
       });
-
       nav.appendChild(prevBtn);
     }
 
-    // Next chapter
     if (index < cards.length - 1) {
-      const nextBtn = document.createElement('button');
-      nextBtn.type = 'button';
-      nextBtn.className = 'chapter-nav-btn chapter-nav-next';
-      nextBtn.textContent = 'Next chapter';
-
-      nextBtn.addEventListener('click', function () {
-        const nextCard = cards[index + 1];
+      var nextBtn = document.createElement("button");
+      nextBtn.type = "button";
+      nextBtn.className = "chapter-nav-btn chapter-nav-next";
+      nextBtn.textContent = "Next chapter";
+      nextBtn.addEventListener("click", function () {
+        var nextCard = cards[index + 1];
         if (!nextCard) return;
+        var nextPart = nextCard.closest(".chapter-part");
+        if (nextPart) setPartOpen(nextPart, true);
         openSummary(nextCard);
-        nextCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        nextCard.scrollIntoView({ behavior: "smooth", block: "start" });
       });
-
       nav.appendChild(nextBtn);
     }
 
-    // Add nav to the end of the summary content
     summary.appendChild(nav);
   });
 
-// --- HOVER DELAY FOR NAV DROPDOWNS ---
-document.querySelectorAll('.nav-item').forEach(item => {
-  let hideTimeout;
+  /* =========================
+     Hover delay for legacy .nav-dropdown (no-op if none)
+     ========================= */
+  document.querySelectorAll(".nav-item").forEach(function (item) {
+    var dropdown = item.querySelector(".nav-dropdown");
+    if (!dropdown) return;
 
-  const dropdown = item.querySelector('.nav-dropdown');
-  if (!dropdown) return;
+    var hideTimeout;
+    item.addEventListener("mouseenter", function () {
+      clearTimeout(hideTimeout);
+      item.classList.add("hover-open");
+    });
 
-  // Open instantly on hover
-  item.addEventListener('mouseenter', () => {
-    clearTimeout(hideTimeout);
-    item.classList.add('hover-open');
-  });
-
-  // Delay the closing
-  item.addEventListener('mouseleave', () => {
-    hideTimeout = setTimeout(() => {
-      item.classList.remove('hover-open');
-    }, 220);   // <--- Increase this for longer hover time (200–350ms ideal)
-  });
-});  
-});
-</script>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  var chapterParts = Array.prototype.slice.call(
-    document.querySelectorAll(".chapter-part")
-  );
-
-  if (!chapterParts.length) return;
-
-  chapterParts.forEach(function (part) {
-    var header = part.querySelector(".chapter-part-header");
-    var icon   = part.querySelector(".chapter-part-toggle-icon");
-    if (!header) return;
-
-    header.addEventListener("click", function () {
-      var isOpen = part.classList.toggle("open");
-      if (icon) {
-        icon.textContent = isOpen ? "▼" : "►";
-      }
+    item.addEventListener("mouseleave", function () {
+      hideTimeout = setTimeout(function () {
+        item.classList.remove("hover-open");
+      }, 220);
     });
   });
 });
 </script>
-
+  
+  
 </body>
 </html>
