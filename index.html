@@ -4680,70 +4680,63 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
    /* =========================
-      Hover delay for nav submenus
-      ========================= */
-   document.querySelectorAll(".nav-item").forEach(function (item) {
-     var hideTimeout;
-     var submenu = item.querySelector(".nav-submenu");
-     if (!submenu) return;
-
-     item.addEventListener("mouseenter", function () {
-       clearTimeout(hideTimeout);
-       item.classList.add("hover-open");
-     });
-
-     item.addEventListener("mouseleave", function () {
-      hideTimeout = setTimeout(function () {
-        item.classList.remove("hover-open");
-      }, 220); // adjust for more/less delay
-    });
-  });
-
-  /* =========================
-     Mobile-friendly nav submenu toggle
+     Nav hover (desktop) + tap toggle (mobile)
      ========================= */
+
   function isTouchNav() {
-    // You can tweak this breakpoint if needed
+    // “Touch-like” if small width OR device reports no hover capability
     return window.innerWidth <= 900 || window.matchMedia("(hover: none)").matches;
   }
 
-  function setupMobileNav() {
-    var navItems = document.querySelectorAll(".nav-item");
+  document.querySelectorAll(".nav-item").forEach(function (item) {
+    var submenu = item.querySelector(".nav-submenu");
+    var topBtn  = item.querySelector(".nav-top");
+    if (!submenu) return;
 
-    navItems.forEach(function (item) {
-      var topBtn = item.querySelector(".nav-top");
-      var submenu = item.querySelector(".nav-submenu");
-      if (!topBtn || !submenu) return;
+    var hideTimeout;
 
-      // We only want to attach ONE handler per button
-      if (topBtn.dataset.mobileNavBound === "true") return;
+    // --- DESKTOP: hover-based open/close with delay
+    item.addEventListener("mouseenter", function () {
+      if (isTouchNav()) return; // ignore hover on touch/mobile
+      clearTimeout(hideTimeout);
+      item.classList.add("hover-open");
+    });
+
+    item.addEventListener("mouseleave", function () {
+      if (isTouchNav()) return; // ignore hover on touch/mobile
+      hideTimeout = setTimeout(function () {
+        item.classList.remove("hover-open");
+      }, 220);
+    });
+
+    // --- MOBILE: tap top-level button to toggle submenu
+    if (topBtn && !topBtn.dataset.mobileNavBound) {
       topBtn.dataset.mobileNavBound = "true";
 
       topBtn.addEventListener("click", function (e) {
         if (!isTouchNav()) {
-          // On desktop, let the normal smooth-scroll + hover behavior run
+          // Desktop: let smooth-scroll + normal behaviour run
           return;
         }
 
-        // On mobile: prevent smooth scroll handler from running
+        // Mobile: prevent smooth scroll and just toggle dropdown
         e.preventDefault();
         e.stopImmediatePropagation();
 
-        // Toggle this submenu; close others
         var isOpen = item.classList.contains("hover-open");
+
+        // Close any other open nav items
         document.querySelectorAll(".nav-item.hover-open").forEach(function (other) {
           other.classList.remove("hover-open");
         });
+
         if (!isOpen) {
           item.classList.add("hover-open");
         }
       });
-    });
-  }
+    }
+  });
 
-  // Run once on load, and again on resize in case orientation changes
-  setupMobileNav();
-  window.addEventListener("resize", setupMobileNav);
 
   
 });
