@@ -4708,9 +4708,16 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll(".nav-item.hover-open").forEach(function (other) {
       if (!exceptItem || other !== exceptItem) {
         other.classList.remove("hover-open");
+
+        // On touch devices, also force-hide the submenu
+        var sm = other.querySelector(".nav-submenu");
+        if (sm && isTouchNav()) {
+          sm.style.display = "none";
+        }
       }
     });
   }
+
 
   document.querySelectorAll(".nav-item").forEach(function (item) {
     var submenu = item.querySelector(".nav-submenu");
@@ -4745,23 +4752,32 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
 
-    /* ---------- TOUCH: tap top to toggle, close others, highlight first item ---------- */
+    /* ---------- TOUCH: tap to toggle, close others, highlight first item ---------- */
     topBtn.addEventListener("click", function (e) {
       if (!isTouchNav()) {
         // Desktop: let generic [data-target] scroll do its job
         return;
       }
 
+      // Mobile / touch: treat as dropdown toggle, not scroll
       e.preventDefault();
       e.stopImmediatePropagation();
 
       var isOpen = item.classList.contains("hover-open");
+
+      // Close any other open nav items
       closeAllNavItems(item);
 
       if (isOpen) {
+        // Closing this one
         item.classList.remove("hover-open");
+        submenu.style.display = "none";
       } else {
+        // Opening this one
         item.classList.add("hover-open");
+        // If your CSS uses flex for vertical submenu layout, keep "flex"
+        // If it looks wrong, change "flex" to "block"
+        submenu.style.display = "flex";
       }
 
       // Ensure the first submenu option gets the golden "active" pill
