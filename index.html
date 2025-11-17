@@ -371,13 +371,10 @@
   }
 
   .nav-item:hover .nav-dropdown,
-  .nav-item:focus-within .nav-dropdown {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-    transform: translateY(0);
+  .nav-item.hover-open .nav-submenu {
+  display: block;           /* ensures it shows when JS adds hover-open */
   }
-
+  
   .nav-dropdown button {
     display: block;
     width: 100%;
@@ -4682,25 +4679,26 @@ document.addEventListener("DOMContentLoaded", function () {
     summary.appendChild(nav);
   });
 
-  /* =========================
-     Hover delay for legacy .nav-dropdown (no-op if none)
-     ========================= */
-  document.querySelectorAll(".nav-item").forEach(function (item) {
-    var dropdown = item.querySelector(".nav-dropdown");
-    if (!dropdown) return;
+   /* =========================
+      Hover delay for nav submenus
+      ========================= */
+   document.querySelectorAll(".nav-item").forEach(function (item) {
+     var hideTimeout;
+     var submenu = item.querySelector(".nav-submenu");
+     if (!submenu) return;
 
-    var hideTimeout;
-    item.addEventListener("mouseenter", function () {
-      clearTimeout(hideTimeout);
-      item.classList.add("hover-open");
-    });
+     item.addEventListener("mouseenter", function () {
+       clearTimeout(hideTimeout);
+       item.classList.add("hover-open");
+     });
 
-    item.addEventListener("mouseleave", function () {
+     item.addEventListener("mouseleave", function () {
       hideTimeout = setTimeout(function () {
         item.classList.remove("hover-open");
-      }, 220);
+      }, 220); // adjust for more/less delay
     });
   });
+
 });
 </script>
   
