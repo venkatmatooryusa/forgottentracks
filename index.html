@@ -4684,57 +4684,87 @@ document.addEventListener("DOMContentLoaded", function () {
      ========================= */
 
   function isTouchNav() {
-    // “Touch-like” if small width OR device reports no hover capability
-    return window.innerWidth <= 900 || window.matchMedia("(hover: none)").matches;
+    // Detect “touch-like” behaviour via pointer/hover, not just width
+    var mqlPointer = window.matchMedia("(pointer: coarse)");
+    var mqlHoverNone = window.matchMedia("(hover: none)");
+
+    var coarse = mqlPointer && mqlPointer.matches;
+    var noHover = mqlHoverNone && mqlHoverNone.matches;
+    var hasTouchEvent = "ontouchstart" in window;
+
+    return coarse || noHover || hasTouchEvent;
+  }
+
+  function closeAllNavItems(exceptItem) {
+    document.querySelectorAll(".nav-item.hover-open").forEach(function (other) {
+      if (!exceptItem || other !== exceptItem) {
+        other.classList.remove("hover-open");
+      }
+    });
   }
 
   document.querySelectorAll(".nav-item").forEach(function (item) {
     var submenu = item.querySelector(".nav-submenu");
     var topBtn  = item.querySelector(".nav-top");
-    if (!submenu) return;
+    if (!submenu || !topBtn) return;
 
-    var hideTimeout;
+    /* ---------- DESKTOP: hover with delay ---------- */
+    if (!isTouchNav()) {
+      var hideTimeout;
 
-    // --- DESKTOP: hover-based open/close with delay
-    item.addEventListener("mouseenter", function () {
-      if (isTouchNav()) return; // ignore hover on touch/mobile
-      clearTimeout(hideTimeout);
-      item.classList.add("hover-open");
-    });
+      item.addEventListener("mouseenter", function () {
+        clearTimeout(hideTimeout);
+        item.classList.add("hover-open");
+      });
 
-    item.addEventListener("mouseleave", function () {
-      if (isTouchNav()) return; // ignore hover on touch/mobile
-      hideTimeout = setTimeout(function () {
-        item.classList.remove("hover-open");
-      }, 220);
-    });
-
-    // --- MOBILE: tap top-level button to toggle submenu
-    if (topBtn && !topBtn.dataset.mobileNavBound) {
-      topBtn.dataset.mobileNavBound = "true";
-
-      topBtn.addEventListener("click", function (e) {
-        if (!isTouchNav()) {
-          // Desktop: let smooth-scroll + normal behaviour run
-          return;
-        }
-
-        // Mobile: prevent smooth scroll and just toggle dropdown
-        e.preventDefault();
-        e.stopImmediatePropagation();
-
-        var isOpen = item.classList.contains("hover-open");
-
-        // Close any other open nav items
-        document.querySelectorAll(".nav-item.hover-open").forEach(function (other) {
-          other.classList.remove("hover-open");
-        });
-
-        if (!isOpen) {
-          item.classList.add("hover-open");
-        }
+      item.addEventListener("mouseleave", function () {
+        hideTimeout = setTimeout(function () {
+          item.classList.remove("hover-open");
+        }, 220);
       });
     }
+
+    /* ---------- TOUCH: tap to toggle, close others, highlight first item ---------- */
+    topBtn.addEventListener("click", function (e) {
+      if (!isTouchNav()) {
+        // Desktop: let smooth scroll + normal behaviour run
+        return;
+      }
+
+      // Mobile / touch: treat as dropdown toggle, not scroll
+      e.preventDefault();
+      e.stopImmediatePropagation();
+
+      var isOpen = item.classList.contains("hover-open");
+
+      // Close any other open nav items
+      closeAllNavItems(item);
+
+      if (isOpen) {
+        item.classList.remove("hover-open");
+      } else {
+        item.classList.add("hover-open");
+      }
+
+      // Ensure the first submenu option gets the golden "active" pill
+      var firstSub = submenu.querySelector(".nav-sub");
+      if (firstSub) {
+        // Clear existing nav-active from nav buttons/links
+        document
+          .querySelectorAll(".nav button.nav-active, .nav a.nav-active")
+          .forEach(function (btn) {
+            btn.classList.remove("nav-active");
+          });
+        firstSub.classList.add("nav-active");
+      }
+    });
+  });
+
+  // TOUCH ONLY: tap outside the nav closes any open submenu
+  document.addEventListener("click", function (e) {
+    if (!isTouchNav()) return;
+    if (e.target.closest(".nav")) return; // tapped inside nav → ignore
+    closeAllNavItems(null);
   });
 
 
