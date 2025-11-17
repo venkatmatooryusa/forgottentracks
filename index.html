@@ -4699,6 +4699,53 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
+  /* =========================
+     Mobile-friendly nav submenu toggle
+     ========================= */
+  function isTouchNav() {
+    // You can tweak this breakpoint if needed
+    return window.innerWidth <= 900 || window.matchMedia("(hover: none)").matches;
+  }
+
+  function setupMobileNav() {
+    var navItems = document.querySelectorAll(".nav-item");
+
+    navItems.forEach(function (item) {
+      var topBtn = item.querySelector(".nav-top");
+      var submenu = item.querySelector(".nav-submenu");
+      if (!topBtn || !submenu) return;
+
+      // We only want to attach ONE handler per button
+      if (topBtn.dataset.mobileNavBound === "true") return;
+      topBtn.dataset.mobileNavBound = "true";
+
+      topBtn.addEventListener("click", function (e) {
+        if (!isTouchNav()) {
+          // On desktop, let the normal smooth-scroll + hover behavior run
+          return;
+        }
+
+        // On mobile: prevent smooth scroll handler from running
+        e.preventDefault();
+        e.stopImmediatePropagation();
+
+        // Toggle this submenu; close others
+        var isOpen = item.classList.contains("hover-open");
+        document.querySelectorAll(".nav-item.hover-open").forEach(function (other) {
+          other.classList.remove("hover-open");
+        });
+        if (!isOpen) {
+          item.classList.add("hover-open");
+        }
+      });
+    });
+  }
+
+  // Run once on load, and again on resize in case orientation changes
+  setupMobileNav();
+  window.addEventListener("resize", setupMobileNav);
+
+  
 });
 </script>
   
