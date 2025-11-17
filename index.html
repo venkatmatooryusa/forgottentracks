@@ -4194,6 +4194,17 @@ document.addEventListener("DOMContentLoaded", function () {
   var navButtons = document.querySelectorAll("[data-target]");
   navButtons.forEach(function (btn) {
     btn.addEventListener("click", function (e) {
+      // If we're on a touch-style device AND this is a top-level nav with a submenu,
+      // do NOT scroll here – the mobile nav handler will just toggle the dropdown.
+      var navItem   = btn.closest(".nav-item");
+      var hasSubnav = navItem && navItem.querySelector(".nav-submenu");
+
+      if (isTouchNav() && navItem && hasSubnav && btn.classList.contains("nav-top")) {
+        // Let the mobile nav click handler (lower in the script) handle this tap.
+        return;
+      }
+
+      // Normal behaviour: scroll to the target section
       if (btn.tagName.toLowerCase() === "a") {
         e.preventDefault();
       }
@@ -4203,6 +4214,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   });
+
 
   /* =========================
      Year updater in footer
