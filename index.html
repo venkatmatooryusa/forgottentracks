@@ -4705,8 +4705,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.querySelectorAll(".nav-item").forEach(function (item) {
     var submenu = item.querySelector(".nav-submenu");
-    var topBtn  = item.querySelector(".nav-top");
-    if (!submenu || !topBtn) return;
+    if (!submenu) return;
+
+    // Find the top-level clickable element for this nav item:
+    // 1) Prefer .nav-top if present
+    // 2) Else use first direct <button> or <a> child
+    var topBtn = item.querySelector(".nav-top");
+    if (!topBtn) {
+      Array.prototype.slice.call(item.children).some(function (child) {
+        if (child.tagName === "BUTTON" || child.tagName === "A") {
+          topBtn = child;
+          return true;
+        }
+        return false;
+      });
+    }
+
+    if (!topBtn) return;
 
     /* ---------- DESKTOP: hover with delay ---------- */
     if (!isTouchNav()) {
@@ -4740,6 +4755,7 @@ document.addEventListener("DOMContentLoaded", function () {
       // Close any other open nav items
       closeAllNavItems(item);
 
+      // Toggle this one
       if (isOpen) {
         item.classList.remove("hover-open");
       } else {
@@ -4749,7 +4765,6 @@ document.addEventListener("DOMContentLoaded", function () {
       // Ensure the first submenu option gets the golden "active" pill
       var firstSub = submenu.querySelector(".nav-sub");
       if (firstSub) {
-        // Clear existing nav-active from nav buttons/links
         document
           .querySelectorAll(".nav button.nav-active, .nav a.nav-active")
           .forEach(function (btn) {
