@@ -4699,7 +4699,9 @@ document.addEventListener("DOMContentLoaded", function () {
      ========================= */
 
   function isTouchNav() {
-    // Detect “touch-like” behaviour via pointer/hover/touch
+    // Treat anything below ~tablet width OR with coarse pointer as "touch nav"
+    var widthTouch = window.innerWidth <= 1024;
+
     var mqlPointer = window.matchMedia("(pointer: coarse)");
     var mqlHoverNone = window.matchMedia("(hover: none)");
 
@@ -4707,8 +4709,9 @@ document.addEventListener("DOMContentLoaded", function () {
     var noHover = mqlHoverNone && mqlHoverNone.matches;
     var hasTouchEvent = "ontouchstart" in window;
 
-    return coarse || noHover || hasTouchEvent;
+    return widthTouch || coarse || noHover || hasTouchEvent;
   }
+
 
   function closeAllNavItems(exceptItem) {
     document.querySelectorAll(".nav-item.hover-open").forEach(function (other) {
