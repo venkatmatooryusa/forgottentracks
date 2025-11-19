@@ -4845,12 +4845,13 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // TOUCH ONLY: tap outside the nav closes any open submenu
-  document.addEventListener("click", function (e) {
-    if (!isTouchNav()) return;
-    if (e.target.closest(".nav")) return; // tapped inside nav → ignore
-    closeAllNavItems(null);
-  });
+  // DESKTOP ONLY: click outside the nav closes any open submenu
+  if (!isTouchNav()) {
+    document.addEventListener("click", function (e) {
+      if (e.target.closest(".nav")) return; // clicked inside nav → ignore
+      closeAllNavItems(null);
+    });
+  }
 
 });
 </script>
