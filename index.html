@@ -4227,11 +4227,10 @@ document.addEventListener("DOMContentLoaded", function () {
        // On touch/mobile: let the dedicated nav handlers control
        // all .nav-top and .nav-sub buttons (open/close dropdown, scroll, etc.)
        if (isTouchNav() && (isNavTop || isNavSub)) {
-         // swallow the event so it doesn't bubble and immediately close the menu
-         e.preventDefault();
-         e.stopPropagation();
+         // On touch, let the dedicated nav handlers manage nav-top/nav-sub completely
          return;
-       }  
+       }
+     
 
 
       // For everything else (desktop, and non-nav buttons):
