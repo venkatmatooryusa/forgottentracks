@@ -4485,19 +4485,22 @@ document.addEventListener("DOMContentLoaded", function () {
   /* =========================
      Active nav state + scroll progress
      ========================= */
-  var sections = [
-    "overview",
-    "golden-cage",
-    "key-ideas",
-    "deep-dive",
-    "lexicon",
-    "who",
-    "inside",
-    "abridged-edition",
-    "author"
-  ].map(function (id) {
-    return { id: id, el: document.getElementById(id) };
-  });
+ var sections = [
+  "overview",
+  "golden-cage",
+  "key-ideas",
+  "quick-assessments",   // Deep Dive: Quick Assessments
+  "stories",             // Deep Dive: Stories
+  "twelve-week-sprint",  // Deep Dive: 12-week Sprint
+  "lexicon",
+  "who",
+  "inside",
+  "abridged-edition",
+  "author"
+].map(function (id) {
+  return { id: id, el: document.getElementById(id) };
+});
+
 
   var navMap = {};
   document.querySelectorAll(".nav button, .nav a").forEach(function (btn) {
