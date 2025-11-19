@@ -4207,25 +4207,32 @@ document.addEventListener("DOMContentLoaded", function () {
   var navButtons = document.querySelectorAll("[data-target]");
   navButtons.forEach(function (btn) {
     btn.addEventListener("click", function (e) {
-      var insideNav = !!btn.closest(".nav");
+      var targetId = btn.getAttribute("data-target");
+      var isNavSub = btn.classList.contains("nav-sub");
 
-      // 👉 On touch devices, ANY button/link inside .nav
-      // should NOT use this generic handler.
-      // Nav behaviour is handled in the dedicated nav section below.
-      if (insideNav && isTouchNav()) {
-        return;
-      }
-
-      // Normal behaviour: scroll to the target section
+      // Anchors: keep preventing default
       if (btn.tagName.toLowerCase() === "a") {
         e.preventDefault();
       }
-      var targetId = btn.getAttribute("data-target");
+
+      // On touch/mobile: clicking a submenu item should scroll AND close the nav
+      if (isTouchNav() && isNavSub) {
+        e.preventDefault(); // ensure no stray default behaviour
+        if (targetId) {
+          scrollToId(targetId);
+        }
+        // close all open dropdowns
+        closeAllNavItems(null);
+        return;
+      }
+
+      // Default behaviour (desktop, or non-submenu buttons)
       if (targetId) {
         scrollToId(targetId);
       }
     });
   });
+
 
   /* =========================
      Year updater in footer
