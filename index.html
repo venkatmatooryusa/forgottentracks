@@ -4197,11 +4197,21 @@ document.addEventListener("DOMContentLoaded", function () {
      Smooth scroll for [data-target]
      ========================= */
   function scrollToId(id) {
-    var el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  }
+  var el = document.getElementById(id);
+  if (!el) return;
+
+  var header = document.querySelector(".site-header");
+  var headerOffset = header ? header.offsetHeight : 0;
+
+  var elementTop = el.getBoundingClientRect().top + window.pageYOffset;
+  var offsetTop = elementTop - (headerOffset + 12); // extra breathing room
+
+  window.scrollTo({
+    top: offsetTop,
+    behavior: "smooth"
+  });
+}
+
 
    var navButtons = document.querySelectorAll("[data-target]");
   navButtons.forEach(function (btn) {
