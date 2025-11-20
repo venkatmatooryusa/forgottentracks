@@ -4720,7 +4720,7 @@ document.addEventListener("DOMContentLoaded", function () {
      ========================= */
 
   function isTouchNav() {
-    // Treat small screens / coarse pointers as "touch nav"
+    // Treat anything below ~tablet width OR with coarse pointer as "touch nav"
     var widthTouch = window.innerWidth <= 1024;
 
     var mqlPointer = window.matchMedia("(pointer: coarse)");
@@ -4733,43 +4733,65 @@ document.addEventListener("DOMContentLoaded", function () {
     return widthTouch || coarse || noHover || hasTouchEvent;
   }
 
+
   function closeAllNavItems(exceptItem) {
     document.querySelectorAll(".nav-item.hover-open").forEach(function (other) {
       if (!exceptItem || other !== exceptItem) {
         other.classList.remove("hover-open");
+
+        // On touch devices, also force-hide the submenu
+        var sm = other.querySelector(".nav-submenu");
+        if (sm && isTouchNav()) {
+          sm.style.display = "none";
+        }
       }
     });
   }
+
 
   document.querySelectorAll(".nav-item").forEach(function (item) {
     var submenu = item.querySelector(".nav-submenu");
     if (!submenu) return;
 
-    // Find the top button for this nav item
+    // Find the top-level clickable element for this nav item
     var topBtn = item.querySelector(".nav-top");
     if (!topBtn) {
-      // Fallback: first button/link inside the nav-item
-      topBtn = item.querySelector("button, a");
+      Array.prototype.slice.call(item.children).some(function (child) {
+        if (child.tagName === "BUTTON" || child.tagName === "A") {
+          topBtn = child;
+          return true;
+        }
+        return false;
+      });
     }
     if (!topBtn) return;
 
-    // DESKTOP: optional hover-open via CSS only (no JS needed)
-    // We rely on:
-    //   .nav-item:hover .nav-submenu { display: block; }
-    // and
-    //   .nav-item.hover-open .nav-submenu { display: block; }
-    // So we don't add mouseenter/mouseleave JS anymore.
+    /* ---------- DESKTOP: hover with delay ---------- */
+    if (!isTouchNav()) {
+      var hideTimeout;
 
-    /* ---------- TOUCH + SMALL SCREENS: tap to toggle dropdown ---------- */
+      item.addEventListener("mouseenter", function () {
+        clearTimeout(hideTimeout);
+        item.classList.add("hover-open");
+      });
+
+      item.addEventListener("mouseleave", function () {
+        hideTimeout = setTimeout(function () {
+          item.classList.remove("hover-open");
+        }, 220);
+      });
+    }
+
+    /* ---------- TOUCH: tap to toggle, close others, highlight first item ---------- */
     topBtn.addEventListener("click", function (e) {
       if (!isTouchNav()) {
-        // Desktop: allow normal [data-target] behavior or hover
+        // Desktop: let generic [data-target] scroll do its job
         return;
       }
 
       // Mobile / touch: treat as dropdown toggle, not scroll
       e.preventDefault();
-      e.stopPropagation();
+      e.stopImmediatePropagation();
 
       var isOpen = item.classList.contains("hover-open");
 
@@ -4777,23 +4799,39 @@ document.addEventListener("DOMContentLoaded", function () {
       closeAllNavItems(item);
 
       if (isOpen) {
+        // Closing this one
         item.classList.remove("hover-open");
+        submenu.style.display = "none";
       } else {
+        // Opening this one
         item.classList.add("hover-open");
+        // If your CSS uses flex for vertical submenu layout, keep "flex"
+        // If it looks wrong, change "flex" to "block"
+        submenu.style.display = "block";
       }
-      // NO inline style changes here; CSS handles display via .hover-open
+
+      // Ensure the first submenu option gets the golden "active" pill
+      var firstSub = submenu.querySelector(".nav-sub");
+      if (firstSub) {
+        document
+          .querySelectorAll(".nav button.nav-active, .nav a.nav-active")
+          .forEach(function (btn) {
+            btn.classList.remove("nav-active");
+          });
+        firstSub.classList.add("nav-active");
+      }
     });
 
     /* ---------- TOUCH: submenu click -> scroll + close ---------- */
     submenu.querySelectorAll(".nav-sub").forEach(function (subBtn) {
       subBtn.addEventListener("click", function (e) {
         if (!isTouchNav()) {
-          // Desktop: generic [data-target] smooth-scroll handler will handle this
+          // Desktop: generic [data-target] scroll handler handles this
           return;
         }
 
         e.preventDefault();
-        e.stopPropagation();
+        e.stopImmediatePropagation();
 
         var targetId = subBtn.getAttribute("data-target");
         if (targetId) {
@@ -4806,13 +4844,12 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // TOUCH ONLY: tap outside the nav closes any open submenu
-  document.addEventListener("click", function (e) {
-    if (!isTouchNav()) return;
-    if (e.target.closest(".nav")) return; // tapped inside nav → ignore
-    closeAllNavItems(null);
-  });
-
+  // DESKTOP ONLY: click outside the nav closes any open submenu
+  if (!isTouchNav()) {
+    document.addEventListener("click", function (e) {
+      if (e.target.closest(".nav")) return; // clicked inside nav → ignore
+      closeAllNavItems(null);
+    });
   }
 
 });
