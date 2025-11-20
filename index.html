@@ -4714,131 +4714,81 @@ document.addEventListener("DOMContentLoaded", function () {
     summary.appendChild(nav);
   });
 
-  /* =========================
+    /* =========================
      Nav hover (desktop) + tap toggle (mobile)
      ========================= */
-
-  function isTouchNav() {
-    // Treat anything below ~tablet width OR with coarse pointer as "touch nav"
-    var widthTouch = window.innerWidth <= 1024;
-
-    var mqlPointer = window.matchMedia("(pointer: coarse)");
-    var mqlHoverNone = window.matchMedia("(hover: none)");
-
-    var coarse = mqlPointer && mqlPointer.matches;
-    var noHover = mqlHoverNone && mqlHoverNone.matches;
-    var hasTouchEvent = "ontouchstart" in window;
-
-    return widthTouch || coarse || noHover || hasTouchEvent;
-  }
-
 
   function closeAllNavItems(exceptItem) {
     document.querySelectorAll(".nav-item.hover-open").forEach(function (other) {
       if (!exceptItem || other !== exceptItem) {
         other.classList.remove("hover-open");
-
-        // On touch devices, also force-hide the submenu
-        var sm = other.querySelector(".nav-submenu");
-        if (sm && isTouchNav()) {
-          sm.style.display = "none";
-        }
       }
     });
   }
 
-
+  // Attach behaviour to each nav item that has a submenu
   document.querySelectorAll(".nav-item").forEach(function (item) {
     var submenu = item.querySelector(".nav-submenu");
-    if (!submenu) return;
-
-    // Find the top-level clickable element for this nav item
     var topBtn = item.querySelector(".nav-top");
-    if (!topBtn) {
-      Array.prototype.slice.call(item.children).some(function (child) {
-        if (child.tagName === "BUTTON" || child.tagName === "A") {
-          topBtn = child;
-          return true;
-        }
-        return false;
-      });
+
+    if (!submenu || !topBtn) return;
+
+    var hideTimeout;
+
+    function openItem() {
+      clearTimeout(hideTimeout);
+      closeAllNavItems(item);
+      item.classList.add("hover-open");
     }
-    if (!topBtn) return;
 
-    /* ---------- DESKTOP: hover with delay ---------- */
+    function closeItemWithDelay() {
+      hideTimeout = setTimeout(function () {
+        item.classList.remove("hover-open");
+      }, 220);
+    }
+
+    /* ---------- DESKTOP: hover to open, leave to close ---------- */
     if (!isTouchNav()) {
-      var hideTimeout;
-
       item.addEventListener("mouseenter", function () {
-        clearTimeout(hideTimeout);
-        item.classList.add("hover-open");
+        openItem();
       });
 
       item.addEventListener("mouseleave", function () {
-        hideTimeout = setTimeout(function () {
-          item.classList.remove("hover-open");
-        }, 220);
+        closeItemWithDelay();
       });
     }
 
-    /* ---------- TOUCH: tap to toggle, close others, highlight first item ---------- */
+    /* ---------- TOUCH: tap top-level to toggle dropdown ---------- */
     topBtn.addEventListener("click", function (e) {
       if (!isTouchNav()) {
-        // Desktop: let generic [data-target] scroll do its job
+        // Desktop: allow normal [data-target] scroll behaviour
         return;
       }
 
-      // Mobile / touch: treat as dropdown toggle, not scroll
       e.preventDefault();
-      e.stopImmediatePropagation();
+      e.stopPropagation();
 
       var isOpen = item.classList.contains("hover-open");
-
-      // Close any other open nav items
-      closeAllNavItems(item);
-
       if (isOpen) {
-        // Closing this one
         item.classList.remove("hover-open");
-        submenu.style.display = "none";
       } else {
-        // Opening this one
-        item.classList.add("hover-open");
-        // If your CSS uses flex for vertical submenu layout, keep "flex"
-        // If it looks wrong, change "flex" to "block"
-        submenu.style.display = "block";
-      }
-
-      // Ensure the first submenu option gets the golden "active" pill
-      var firstSub = submenu.querySelector(".nav-sub");
-      if (firstSub) {
-        document
-          .querySelectorAll(".nav button.nav-active, .nav a.nav-active")
-          .forEach(function (btn) {
-            btn.classList.remove("nav-active");
-          });
-        firstSub.classList.add("nav-active");
+        openItem();
       }
     });
 
-    /* ---------- TOUCH: submenu click -> close after scroll ---------- */
+    /* ---------- TOUCH: tap submenu → scroll (via [data-target]) + close ---------- */
     submenu.querySelectorAll(".nav-sub").forEach(function (subBtn) {
       subBtn.addEventListener("click", function (e) {
         if (!isTouchNav()) {
-          // Desktop: generic [data-target] handler does scroll;
-          // outside-click handler will close menus.
-        return;
+          // Desktop: [data-target] handler does scroll, outside click closes
+          return;
         }
 
-        // ❌ Do NOT prevent default or stop propagation
-        //    -> This allows the generic [data-target] handler to do smooth scroll.
-
-        // Just close all nav items after the tap.
+        // Do NOT preventDefault here, so [data-target] scrollToId runs.
+        // Just close the nav after the tap.
         closeAllNavItems(null);
       });
     });
-
-  
   });
 
   // DESKTOP ONLY: click outside the nav closes any open submenu
