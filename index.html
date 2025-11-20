@@ -4730,9 +4730,13 @@ document.addEventListener("DOMContentLoaded", function () {
     var submenu = item.querySelector(".nav-submenu");
     if (!topBtn || !submenu) return;
 
-    // 1) Top-level button: toggles dropdown only (never scroll)
-    topBtn.addEventListener("click", function (e) {
+    // 1) Top-level button: toggles dropdown on touch (pointerdown), click for desktop
+    topBtn.addEventListener("pointerdown", function (e) {
+      // Only trigger immediate toggle for touch/pen (mobile/tablet)
+      if (e.pointerType === "mouse") return; 
+
       e.preventDefault();
+      e.stopImmediatePropagation();
 
       var isOpen = item.classList.contains("hover-open");
 
@@ -4745,6 +4749,24 @@ document.addEventListener("DOMContentLoaded", function () {
         item.classList.remove("hover-open");
       }
     });
+
+    // Desktop fallback (normal click)
+    topBtn.addEventListener("click", function (e) {
+      if (e.pointerType !== "mouse") return; // handled above for touch
+
+      e.preventDefault();
+
+      var isOpen = item.classList.contains("hover-open");
+
+      closeAllNavItems();
+
+      if (!isOpen) {
+        item.classList.add("hover-open");
+      } else {
+        item.classList.remove("hover-open");
+      }
+    });
+
 
     // 2) Submenu items: scroll to section (if data-target) + close all menus
     submenu.querySelectorAll(".nav-sub").forEach(function (subBtn) {
