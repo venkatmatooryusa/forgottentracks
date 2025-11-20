@@ -1704,43 +1704,22 @@
       FT Insight
     </button>
     <div class="nav-submenu">
-      <button class="nav-sub" data-target="overview" type="button">
+      <button class="nav-sub" type="button" data-target="overview">
         Overview
       </button>
-      <button class="nav-sub" data-target="golden-cage" type="button">
+      <button class="nav-sub" type="button" data-target="golden-cage">
         The Golden Cage
       </button>
-      <button class="nav-sub" data-target="key-ideas" type="button">
+      <button class="nav-sub" type="button" data-target="key-ideas">
         Key Ideas
       </button>
-      <button class="nav-sub" data-target="who" type="button">
+      <button class="nav-sub" type="button" data-target="who">
         Who it’s for
       </button>
     </div>
   </div>
 
-  <!-- The Book: structure, reading practice, abridged (all inside #inside) -->
-  <div class="nav-item">
-    <button
-      class="nav-primary nav-top"
-      type="button"
-    >
-      The Book
-    </button>
-    <div class="nav-submenu">
-      <button class="nav-sub" data-target="who" type="button">
-        Use Cases
-      </button>
-      <button class="nav-sub" data-target="inside" type="button">
-        Structure &amp; Reading Practice
-      </button>
-      <button class="nav-sub" data-target="abridged-edition" type="button">
-        Abridged Edition (1-page per chapter)
-      </button>
-    </div>
-  </div>
-
-  <!-- Deep Dive: tools, stories, sprint, lexicon -->
+  <!-- Deep Dive: Assessments, Stories, Sprint, Lexicon -->
   <div class="nav-item">
     <button
       class="nav-primary nav-top"
@@ -1749,37 +1728,69 @@
       Deep Dive
     </button>
     <div class="nav-submenu">
-      <button class="nav-sub" data-target="quick-assessments" type="button">
+      <button class="nav-sub" type="button" data-target="quick-assessments">
         Quick Assessments
       </button>
-      <button class="nav-sub" data-target="stories" type="button">
-        Stories
+      <button class="nav-sub" type="button" data-target="stories">
+        Stories &amp; Micro-scenes
       </button>
-      <button class="nav-sub" data-target="twelve-week-sprint" type="button">
+      <button class="nav-sub" type="button" data-target="twelve-week-sprint">
         12-week Sprint
       </button>
-      <button class="nav-sub" data-target="lexicon" type="button">
-        Lexicon
+      <button class="nav-sub" type="button" data-target="lexicon">
+        Concept Lexicon
       </button>
     </div>
   </div>
 
- <!-- About Author -->
+  <!-- Book: Inside, Abridged, Amazon link -->
   <div class="nav-item">
     <button
       class="nav-primary nav-top"
+      type="button"
+    >
+      Book
+    </button>
+    <div class="nav-submenu">
+      <button class="nav-sub" type="button" data-target="inside">
+        Inside the Book
+      </button>
+      <button class="nav-sub" type="button" data-target="abridged-edition">
+        Abridged Edition
+      </button>
+      <a
+        class="nav-sub"
+        href="https://a.co/d/cMA68qJ"
+        target="_blank"
+        rel="noopener"
+      >
+        Buy on Amazon
+      </a>
+    </div>
+  </div>
 
+  <!-- About Author: About + LinkedIn -->
+  <div class="nav-item">
+    <button
+      class="nav-primary nav-top"
       type="button"
     >
       About Author
     </button>
     <div class="nav-submenu">
-      <button class="nav-sub" data-target="author" type="button">
-        Venkat Matoory
+      <button class="nav-sub" type="button" data-target="author">
+        About the Author
       </button>
+      <a
+        class="nav-sub"
+        href="https://www.linkedin.com/in/venkatmatoory/"
+        target="_blank"
+        rel="noopener"
+      >
+        Connect on LinkedIn
+      </a>
     </div>
   </div>
-  
 </nav>
 
 
@@ -4200,39 +4211,31 @@ document.addEventListener("DOMContentLoaded", function () {
      Smooth scroll for [data-target]
      ========================= */
   function scrollToId(id) {
-  var el = document.getElementById(id);
-  if (!el) return;
+    var el = document.getElementById(id);
+    if (!el) return;
 
-  var header = document.querySelector(".site-header");
-  var headerOffset = header ? header.offsetHeight : 0;
+    var header = document.querySelector(".site-header");
+    var headerOffset = header ? header.offsetHeight : 0;
 
-  var elementTop = el.getBoundingClientRect().top + window.pageYOffset;
-  var offsetTop = elementTop - (headerOffset + 12); // extra breathing room
+    var elementTop = el.getBoundingClientRect().top + window.pageYOffset;
+    var offsetTop = elementTop - (headerOffset + 12); // extra breathing room
 
-  window.scrollTo({
-    top: offsetTop,
-    behavior: "smooth"
-  });
-}
+    window.scrollTo({
+      top: offsetTop,
+      behavior: "smooth"
+    });
+  }
 
-
-   var navButtons = document.querySelectorAll("[data-target]");
+  // Generic [data-target] scroll handler
+  // NOTE: .nav-sub items have their own logic; we skip them here.
+  var navButtons = document.querySelectorAll("[data-target]");
   navButtons.forEach(function (btn) {
+    if (btn.classList.contains("nav-sub")) return;
+
     btn.addEventListener("click", function (e) {
       var targetId = btn.getAttribute("data-target");
-      var isNavTop = btn.classList.contains("nav-top");
-      var isNavSub = btn.classList.contains("nav-sub");
       var isAnchor = btn.tagName.toLowerCase() === "a";
 
-       // On touch/mobile: let the dedicated nav handlers control
-       // all .nav-top and .nav-sub buttons (open/close dropdown, scroll, etc.)
-       if (isTouchNav() && isNavTop) {
-         // On touch, top-level buttons just toggle dropdowns.
-         // Let .nav-sub still use the generic scroll handler.
-         return;
-       }
-     
-      // For everything else (desktop, and non-nav buttons):
       if (isAnchor) {
         e.preventDefault();
       }
@@ -4241,8 +4244,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   });
-
-
 
   /* =========================
      Year updater in footer
@@ -4500,22 +4501,21 @@ document.addEventListener("DOMContentLoaded", function () {
   /* =========================
      Active nav state + scroll progress
      ========================= */
- var sections = [
-  "overview",
-  "golden-cage",
-  "key-ideas",
-  "quick-assessments",   // Deep Dive: Quick Assessments
-  "stories",             // Deep Dive: Stories
-  "twelve-week-sprint",  // Deep Dive: 12-week Sprint
-  "lexicon",
-  "who",
-  "inside",
-  "abridged-edition",
-  "author"
-].map(function (id) {
-  return { id: id, el: document.getElementById(id) };
-});
-
+  var sections = [
+    "overview",
+    "golden-cage",
+    "key-ideas",
+    "quick-assessments",
+    "stories",
+    "twelve-week-sprint",
+    "lexicon",
+    "who",
+    "inside",
+    "abridged-edition",
+    "author"
+  ].map(function (id) {
+    return { id: id, el: document.getElementById(id) };
+  });
 
   var navMap = {};
   document.querySelectorAll(".nav button, .nav a").forEach(function (btn) {
@@ -4714,93 +4714,63 @@ document.addEventListener("DOMContentLoaded", function () {
     summary.appendChild(nav);
   });
 
-    /* =========================
-     Nav hover (desktop) + tap toggle (mobile)
+  /* =========================
+     Nav – click-only dropdowns + submenu scroll
      ========================= */
 
   function closeAllNavItems(exceptItem) {
-    document.querySelectorAll(".nav-item.hover-open").forEach(function (other) {
-      if (!exceptItem || other !== exceptItem) {
-        other.classList.remove("hover-open");
-      }
+    document.querySelectorAll(".nav-item").forEach(function (item) {
+      if (exceptItem && item === exceptItem) return;
+      item.classList.remove("hover-open");
     });
   }
 
-  // Attach behaviour to each nav item that has a submenu
   document.querySelectorAll(".nav-item").forEach(function (item) {
-    var submenu = item.querySelector(".nav-submenu");
     var topBtn = item.querySelector(".nav-top");
+    var submenu = item.querySelector(".nav-submenu");
+    if (!topBtn || !submenu) return;
 
-    if (!submenu || !topBtn) return;
-
-    var hideTimeout;
-
-    function openItem() {
-      clearTimeout(hideTimeout);
-      closeAllNavItems(item);
-      item.classList.add("hover-open");
-    }
-
-    function closeItemWithDelay() {
-      hideTimeout = setTimeout(function () {
-        item.classList.remove("hover-open");
-      }, 220);
-    }
-
-    /* ---------- DESKTOP: hover to open, leave to close ---------- */
-    if (!isTouchNav()) {
-      item.addEventListener("mouseenter", function () {
-        openItem();
-      });
-
-      item.addEventListener("mouseleave", function () {
-        closeItemWithDelay();
-      });
-    }
-
-    /* ---------- TOUCH: tap top-level to toggle dropdown ---------- */
+    // 1) Top-level button: toggles dropdown only (never scroll)
     topBtn.addEventListener("click", function (e) {
-      if (!isTouchNav()) {
-        // Desktop: allow normal [data-target] scroll behaviour
-        return;
-      }
-
       e.preventDefault();
-      e.stopPropagation();
 
       var isOpen = item.classList.contains("hover-open");
-      if (isOpen) {
-        item.classList.remove("hover-open");
+
+      // Close all others first
+      closeAllNavItems();
+
+      if (!isOpen) {
+        item.classList.add("hover-open");
       } else {
-        openItem();
+        item.classList.remove("hover-open");
       }
     });
 
-    /* ---------- TOUCH: tap submenu → scroll (via [data-target]) + close ---------- */
+    // 2) Submenu items: scroll to section (if data-target) + close all menus
     submenu.querySelectorAll(".nav-sub").forEach(function (subBtn) {
       subBtn.addEventListener("click", function (e) {
-        if (!isTouchNav()) {
-          // Desktop: [data-target] handler does scroll, outside click closes
-          return;
+        var targetId = subBtn.getAttribute("data-target");
+        if (targetId) {
+          // internal scroll
+          e.preventDefault();
+          scrollToId(targetId);
         }
-
-        // Do NOT preventDefault here, so [data-target] scrollToId runs.
-        // Just close the nav after the tap.
-        closeAllNavItems(null);
+        // Close dropdowns after navigation (both mobile and desktop)
+        closeAllNavItems();
       });
     });
   });
 
-  // DESKTOP ONLY: click outside the nav closes any open submenu
-  if (!isTouchNav()) {
-    document.addEventListener("click", function (e) {
-      if (e.target.closest(".nav")) return; // clicked inside nav → ignore
-      closeAllNavItems(null);
-    });
-  }
+  // 3) Click outside the nav closes any open dropdowns
+  document.addEventListener("click", function (e) {
+    if (!e.target.closest(".nav")) {
+      closeAllNavItems();
+    }
+  });
 
 });
 </script>
+
   
   
 </body>
