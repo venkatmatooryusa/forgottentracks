@@ -370,10 +370,10 @@
       visibility 0.16s ease-out;
   }
 
-  .nav-item:hover .nav-dropdown,
   .nav-item.hover-open .nav-submenu {
-  display: block;           /* ensures it shows when JS adds hover-open */
+  display: block; /* ensures it shows when JS adds hover-open */
   }
+
   
   .nav-dropdown button {
     display: block;
@@ -4226,13 +4226,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
        // On touch/mobile: let the dedicated nav handlers control
        // all .nav-top and .nav-sub buttons (open/close dropdown, scroll, etc.)
-       if (isTouchNav() && (isNavTop || isNavSub)) {
-         // On touch, let the dedicated nav handlers manage nav-top/nav-sub completely
+       if (isTouchNav() && isNavTop) {
+         // On touch, top-level buttons just toggle dropdowns.
+         // Let .nav-sub still use the generic scroll handler.
          return;
        }
      
-
-
       // For everything else (desktop, and non-nav buttons):
       if (isAnchor) {
         e.preventDefault();
@@ -4822,26 +4821,24 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
 
-    /* ---------- TOUCH: submenu click -> scroll + close ---------- */
+    /* ---------- TOUCH: submenu click -> close after scroll ---------- */
     submenu.querySelectorAll(".nav-sub").forEach(function (subBtn) {
       subBtn.addEventListener("click", function (e) {
         if (!isTouchNav()) {
-          // Desktop: generic [data-target] scroll handler handles this
-          return;
+          // Desktop: generic [data-target] handler does scroll;
+          // outside-click handler will close menus.
+        return;
         }
 
-        e.preventDefault();
-        e.stopImmediatePropagation();
+        // ❌ Do NOT prevent default or stop propagation
+        //    -> This allows the generic [data-target] handler to do smooth scroll.
 
-        var targetId = subBtn.getAttribute("data-target");
-        if (targetId) {
-          scrollToId(targetId);
-        }
-
-        // Close all nav items after navigating
+        // Just close all nav items after the tap.
         closeAllNavItems(null);
       });
     });
+
+  
   });
 
   // DESKTOP ONLY: click outside the nav closes any open submenu
